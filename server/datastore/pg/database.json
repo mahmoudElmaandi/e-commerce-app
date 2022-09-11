@@ -1,0 +1,8 @@
+{
+    "migrations-dir": "./datastore/pg/migrations",
+    "user": "postgres",
+    "password": "postgre",
+    "host": "localhost",
+    "port": 5432,
+    "database": "test"
+}
