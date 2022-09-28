@@ -9,13 +9,13 @@ export class pgDatastore implements Datastore {
         this.pool = pool;
     };
 
-    async listProducts(page: number = 1, limit: number = 10): Promise<Product[]> {
-        const offest = (page! - 1) * limit!;
-        return (await this.pool.query('SELECT * FROM Product ORDER BY createdAt DESC LIMIT $1 OFFSET $2', [limit, offest])).rows
+    async listProducts(page: number = 1, pageSize: number = 10): Promise<Product[]> {
+        const offest = (page! - 1) * pageSize!;
+        return (await this.pool.query('SELECT * FROM Product ORDER BY createdAt DESC LIMIT $1 OFFSET $2', [pageSize, offest])).rows
     };
 
-    async getPagination(limit: number = 10) {
-        return { noPages: Math.ceil((await this.pool.query(`SELECT COUNT(id) as length FROM Product`)).rows[0].length / limit) }
+    async getPagination(currentPage: number, pageSize: number = 10) {
+        return { currentPage, pageSize, total: (await this.pool.query(`SELECT COUNT(id) as length FROM Product`)).rows[0].length }
     };
 
     async createProduct(product: Product): Promise<void> {

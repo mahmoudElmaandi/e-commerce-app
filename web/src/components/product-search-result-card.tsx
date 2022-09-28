@@ -1,4 +1,4 @@
-import { Product } from "../../../types";
+import { Product } from "../../../server/types";
 
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
 

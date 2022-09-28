@@ -1,10 +1,12 @@
 import { Product, Category } from './types';
 
+export interface Pagination { total: number, currentPage: number, pageSize: number };
+
 // Products APIs
 export interface ListProductsRequest { }
 export interface ListProductsResponse {
     products: Product[];
-    pagination: { noPages: number }
+    pagination: Pagination
 }
 
 export interface CreateProductRequest extends Product { };

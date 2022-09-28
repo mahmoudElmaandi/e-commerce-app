@@ -1,12 +1,15 @@
 import './App.css';
-import { ListPosts } from "./pages/list-posts";
+import { ListProducts } from "./pages/list-products";
 
+import { Routes, Route, Link } from "react-router-dom";
 
 
 function App() {
   return (
     <>
-      <ListPosts></ListPosts>
+      <Routes>
+        <Route path="/products" element={<ListProducts />} />
+      </Routes>
     </>
   );
 }

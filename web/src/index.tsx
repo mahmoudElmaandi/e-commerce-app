@@ -11,6 +11,8 @@ import {
 } from 'react-query'
 
 import { ChakraProvider } from '@chakra-ui/react';
+import { BrowserRouter } from "react-router-dom";
+
 
 // Create a client
 const queryClient = new QueryClient();
@@ -22,12 +24,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
 
-    <ChakraProvider>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </ChakraProvider>
+    <BrowserRouter>
+      <ChakraProvider>
 
-  </React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </ChakraProvider>
+    </BrowserRouter>
+
+  </React.StrictMode >
 );
 

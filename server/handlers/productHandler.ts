@@ -11,7 +11,7 @@ export class ProductHandler {
     }
 
     public list: ExpressHandler<ListProductsRequest, ListProductsResponse> = async (req, res) => {
-        return res.send({ products: await this.db.listProducts(req.query.page, req.query.limit), pagination: await this.db.getPagination(req.query.limit) });
+        return res.send({ products: await this.db.listProducts(req.query.page, req.query.pageSize), pagination: await this.db.getPagination(req.query.page, req.query.pageSize) });
     };
 
     public create: ExpressHandler<CreateProductRequest, CreateProductResponse> = async (req, res) => {

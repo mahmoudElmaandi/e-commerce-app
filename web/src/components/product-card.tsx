@@ -1,5 +1,5 @@
 import React from "react";
-import { Product } from "../../../types";
+import { Product } from "../../../server/types";
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
 
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
