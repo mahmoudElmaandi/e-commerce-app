@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "migrate": "npx node-pg-migrate create init --config-file datastore/pg/database.json --migration-file-language sql",
+    "migrate": "npx node-pg-migrate create user --config-file datastore/pg/database.json --migration-file-language sql",
     "up": "npx node-pg-migrate up  --config-file datastore/pg/database.json",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },

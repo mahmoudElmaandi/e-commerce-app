@@ -1,12 +1,32 @@
 import { Datastore } from './../index';
 import { Pool } from 'pg';
-import { Product, Category } from '../../types';
+import { Product, Category, User } from '../../types';
 
 export class pgDatastore implements Datastore {
     private pool: Pool;
 
     constructor(pool: Pool) {
         this.pool = pool;
+    }
+
+    async createUser(user: User): Promise<void> {
+        await this.pool.query('INSERT INTO Users (username,email,password) VALUES ($1, $2, $3 )', [user.username, user.email, user.password])
+    };
+
+    async getUserById(id: string): Promise<User | undefined> {
+        return (await this.pool.query('SELECT * FROM Users WHERE id = $1', [id])).rows[0]
+    };
+
+    async getUserByEmail(email: string): Promise<User | undefined> {
+        return (await this.pool.query('SELECT * FROM Users WHERE email = $1', [email])).rows[0]
+    };
+
+    async getUserByUsername(username: string): Promise<User | undefined> {
+        return (await this.pool.query('SELECT * FROM Users WHERE username = $1', [username])).rows[0]
+    };
+
+    async deleteUser(id: string): Promise<void> {
+        await this.pool.query('DELETE FROM Users WHERE id = $1', [id])
     };
 
     async listProducts(page: number = 1, pageSize: number = 10): Promise<Product[]> {

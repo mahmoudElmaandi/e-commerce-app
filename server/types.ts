@@ -1,3 +1,11 @@
+export interface User {
+    id?: string,
+    username: string,
+    password: string,
+    email: string,
+    createdAt?: number
+}
+
 export interface Product {
     id?: string,
     name: string,

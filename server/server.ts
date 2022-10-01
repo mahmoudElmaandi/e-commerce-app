@@ -1,3 +1,4 @@
+import { UserHandler } from './handlers/userHandler';
 import express, { Express, Request, Response, RequestHandler } from 'express'
 import { CategoryHandler } from './handlers/categoryHandler';
 import { db } from './datastore/index';
@@ -26,16 +27,19 @@ export async function createServer(pool: Pool) {
         res.send('home')
     });
 
+    const userHandler = new UserHandler(db);
     const productHandler = new ProductHandler(db);
     const categoryHandler = new CategoryHandler(db);
 
     const EndpointsHandlers: { [key in Endpoints]: RequestHandler<any, any> } = {
 
+        [Endpoints.signup]: userHandler.signup,
+        [Endpoints.signin]: userHandler.signin,
+
         [Endpoints.listProducts]: productHandler.list,
         [Endpoints.createProduct]: productHandler.create,
         [Endpoints.getProduct]: productHandler.get,
         [Endpoints.deleteProduct]: productHandler.delete,
-
 
         [Endpoints.listCategories]: categoryHandler.list,
         [Endpoints.getCategory]: categoryHandler.get,

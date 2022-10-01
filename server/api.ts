@@ -1,4 +1,15 @@
-import { Product, Category } from './types';
+import { User, Product, Category } from './types';
+
+// Users APIs
+export type SignUpRequest = Pick<User, 'username' | 'email' | 'password'>;
+export interface SignUpResponse { jwt: string }
+
+
+export interface SignInRequest { login: string; password: string; }
+export type SignInResponse = {
+    user: Pick<User, 'email' | 'username' | 'id'>;
+    jwt: string;
+};
 
 export interface Pagination { total: number, currentPage: number, pageSize: number };
 
@@ -29,6 +40,8 @@ export interface GetCategoryResponse { category: Category }
 export interface DeleteCategoryResponse { };
 
 import { RequestHandler } from 'express';
+import exp from 'constants';
+import { type } from 'os';
 
 type WithError<T> = T & { error: string };
 

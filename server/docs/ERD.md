@@ -10,11 +10,11 @@ PostgreSQL
 | Column | Type |
 |--------|------|
 | id | UUID |
-| Username | STRING |
-| Password | STRING |
-| Email | STRING |
-| First/Last name | STRING |
-| CreatedAt | Timestamp |
+| username | STRING |
+| password | STRING |
+| email | STRING |
+| first/last name | STRING |
+| createdAt | Timestamp |
 
 
 **Products**:
