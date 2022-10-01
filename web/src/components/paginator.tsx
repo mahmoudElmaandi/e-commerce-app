@@ -1,6 +1,6 @@
 import { Button, Flex, Link as LinkCH } from "@chakra-ui/react";
 import { Pagination } from "../../../server/api";
-import { HOST } from "../env";
+import { ROOTENDPOINT } from "../env";
 import { Link } from "react-router-dom";
 
 export const Paginator: React.FC<{ pagination: Pagination, refetch: Function }> = ({ pagination, refetch }) => {

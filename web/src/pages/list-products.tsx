@@ -10,7 +10,7 @@ import {
     useSearchParams,
 } from "react-router-dom";
 
-import { HOST } from "../env";
+import { ROOTENDPOINT } from "../env";
 export const ListProducts = () => {
     let [searchParams, setSearchParams] = useSearchParams();
 
@@ -29,7 +29,7 @@ export const ListProducts = () => {
         return response.json();
     }
 
-    const ENDPOINT = `${HOST}/api/v1/products?page=${page}&pageSize=${pageSize}`;
+    const ENDPOINT = `${ROOTENDPOINT}/api/v1/products?page=${page}&pageSize=${pageSize}`;
 
     let { isLoading, isError, data, error } = useQuery(['listposts'], () => fetchPost(ENDPOINT))
 

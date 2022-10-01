@@ -26,7 +26,6 @@ root.render(
 
     <BrowserRouter>
       <ChakraProvider>
-
         <QueryClientProvider client={queryClient}>
           <App />
         </QueryClientProvider>
