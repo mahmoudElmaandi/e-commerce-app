@@ -1,5 +1,5 @@
 import { EmailIcon } from "@chakra-ui/icons"
-import { Alert, AlertIcon, Button, Container, Flex, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
+import { Alert, AlertIcon, Button, Container, Flex, FormControl, FormErrorMessage, FormHelperText, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
 import React, { useState } from "react";
 
 import { ROOTENDPOINT } from "../env";
@@ -27,7 +27,7 @@ export const Signup = () => {
 
 
     const [hasError, setHasError] = useState(false);
-    const [error, setError] = useState('');
+    const [resError, setResError] = useState('');
 
 
     const handleChange = (e: React.SyntheticEvent) => {
@@ -44,11 +44,11 @@ export const Signup = () => {
 
         if (!username || !email || !password) {
             setHasError(true)
-            setError('All fileds are required');
             return
         };
 
-        setHasError(false)
+        setHasError(false);
+
         const response = await fetch(`${ROOTENDPOINT}${EndpointsConfigs.signup.url}`, {
             method: EndpointsConfigs.signup.method,
             headers: {
@@ -63,7 +63,7 @@ export const Signup = () => {
 
         if (response.status === 403) {
             setHasError(true)
-            setError(data.error);
+            setResError(data.error);
         };
 
         if (response.status === 200) {
@@ -75,29 +75,31 @@ export const Signup = () => {
     return (
         <Container maxW='md' color='black'>
             <Stack spacing={4}>
-                {
-                    hasError ? <Alert status='warning'>
-                        <AlertIcon />
-                        {error}
-                    </Alert> : ''
-                }
 
-                <InputGroup>
-                    <Input type='text' name="username" placeholder='Username' value={username} onChange={handleChange} />
-                </InputGroup>
+                <FormControl isInvalid={username === ''}>
+                    <InputGroup>
+                        <Input isRequired={true} type='text' name="username" placeholder='Username' value={username} onChange={handleChange} />
+                    </InputGroup>
+                    {username ? "" : <FormErrorMessage>Username is required.</FormErrorMessage>}
+                </FormControl>
 
-                <InputGroup>
-                    <InputLeftElement
-                        pointerEvents='none'
-                        children={<EmailIcon color='gray.300' />}
-                    />
-                    <Input type='email' name="email" placeholder='Email' value={email} onChange={handleChange} />
-                </InputGroup>
+                <FormControl isInvalid={email === ''}>
+                    <InputGroup>
+                        <InputLeftElement
+                            pointerEvents='none'
+                            children={<EmailIcon color='gray.300' />}
+                        />
+                        <Input isRequired={true} type='email' name="email" placeholder='Email' value={email} onChange={handleChange} />
+                    </InputGroup>
+                    {email ? "" : <FormErrorMessage>Email is required.</FormErrorMessage>}
+                </FormControl>
 
                 <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
 
-                <Button colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign Up</Button>
+                {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
+
+                <Button disabled={!username || !email || !password} colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign Up</Button>
             </Stack>
-        </Container>
+        </Container >
     )
 }

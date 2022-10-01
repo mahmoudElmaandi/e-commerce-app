@@ -1,5 +1,5 @@
 import { ViewIcon, ViewOffIcon, } from "@chakra-ui/icons"
-import { Alert, AlertIcon, Button, Container, Input, InputGroup, InputRightElement, Stack } from "@chakra-ui/react"
+import { Alert, AlertIcon, Button, Container, FormControl, FormErrorMessage, Input, InputGroup, InputRightElement, Stack } from "@chakra-ui/react"
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +15,7 @@ export const Signin = () => {
     const [password, setPassword] = useState('')
 
     const [hasError, setHasError] = useState(false);
-    const [error, setError] = useState('');
+    const [resError, setResError] = useState('');
 
 
     const handleChange = (e: React.SyntheticEvent) => {
@@ -31,7 +31,6 @@ export const Signin = () => {
 
         if (!login || !password) {
             setHasError(true)
-            setError('All fileds are required');
             return
         };
 
@@ -49,7 +48,7 @@ export const Signin = () => {
 
         if (response.status === 403) {
             setHasError(true)
-            setError("wrong credentials");
+            setResError("wrong credentials");
         };
 
         if (response.status === 200) {
@@ -62,21 +61,20 @@ export const Signin = () => {
     return (
         <Container maxW='md' color='black'>
             <Stack spacing={4}>
-                {
-                    hasError ? <Alert status='warning'>
-                        <AlertIcon />
-                        {error}
-                    </Alert> : ''
-                }
 
-                <InputGroup>
-                    <Input type='text' name="login" placeholder='Username' value={login} onChange={handleChange} />
-                </InputGroup>
+                <FormControl isInvalid={login === ''}>
+                    <InputGroup>
+                        <Input type='text' name="login" placeholder='Username or Email' value={login} onChange={handleChange} />
+                    </InputGroup>
+                    {login ? "" : <FormErrorMessage>Username or Email is required.</FormErrorMessage>}
+                </FormControl>
 
                 <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
 
-                <Button colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign In</Button>
+                {hasError ? <Alert status='warning'> <AlertIcon />{resError}</Alert> : ''}
+
+                <Button disabled={!login || !password} colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign In</Button>
             </Stack>
-        </Container>
+        </Container >
     )
 }
