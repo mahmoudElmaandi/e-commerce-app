@@ -1,7 +1,6 @@
-import { Product } from './../types';
-import { CreateProductRequest, CreateProductResponse, GetProductResponse, ExpressHandlerWithParams, DeleteProductResponse } from './../api';
+import { Product, ListProductsRequest, ListProductsResponse, CreateProductRequest, CreateProductResponse, GetProductResponse, DeleteProductResponse } from '@ecommerce/shared';
 import { Datastore } from './../datastore/index';
-import { ExpressHandler, ListProductsRequest, ListProductsResponse } from "../api";
+import { ExpressHandler, ExpressHandlerWithParams } from "../types";
 
 export class ProductHandler {
     private db: Datastore;

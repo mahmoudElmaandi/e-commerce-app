@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { ROOTENDPOINT } from "../env";
+import { EndpointsConfigs } from "@ecommerce/shared";
 
 // TODO: check if user is already logged in
 export const Signin = () => {
@@ -37,8 +38,8 @@ export const Signin = () => {
 
         setHasError(false)
 
-        const response = await fetch(`${ROOTENDPOINT}/api/v1/signin`, { //EndpointsConfigs.signin.url
-            method: 'POST', //  EndpointsConfigs.signin.method
+        const response = await fetch(`${ROOTENDPOINT}${EndpointsConfigs.signin.url}`, {
+            method: EndpointsConfigs.signin.method,
             headers: {
                 'Content-Type': 'application/json',
             },

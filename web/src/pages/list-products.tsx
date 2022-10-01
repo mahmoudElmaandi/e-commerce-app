@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from 'react-query';
-import { Product } from "../../../server/types";
+import { Product } from "@ecommerce/shared";
 import { ProductCard } from '../components/product-card';
 import { Box, Flex, Image, Text, Link, Button, Stack, Skeleton } from "@chakra-ui/react"
 import { Paginator } from "../components/paginator";

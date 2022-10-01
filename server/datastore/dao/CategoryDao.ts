@@ -1,4 +1,4 @@
-import { Category } from './../../types';
+import { Category } from '@ecommerce/shared';
 
 export interface CategoryDao {
     listCategrories(): Promise<Category[]>,

@@ -1,4 +1,4 @@
-import { Product } from './../../types';
+import { Product } from '@ecommerce/shared';
 
 export interface ProductDao {
     listProducts(page?: number, pageSize?: number): Promise<Product[]>

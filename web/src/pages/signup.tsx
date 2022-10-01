@@ -9,8 +9,8 @@ Module not found: Error: You attempted to import ../../../server/endpoints which
 You can either move it inside src/, or add a symlink to it from project's node_modules/.
  */
 
-// TODO: use CRACO @https://github.com/dilanx/craco
-import { EndpointsConfigs } from "../../../server/endpoints";
+// TODO: use CRACO @https://www.npmjs.com/package/@craco/craco/v/7.0.0-alpha.7
+import { EndpointsConfigs } from "@ecommerce/shared";
 import { useNavigate } from "react-router-dom";
 
 
@@ -49,8 +49,8 @@ export const Signup = () => {
         };
 
         setHasError(false)
-        const response = await fetch(`${ROOTENDPOINT}/api/v1/signup`, { //EndpointsConfigs.signup.url
-            method: 'POST', //  EndpointsConfigs.signup.method
+        const response = await fetch(`${ROOTENDPOINT}${EndpointsConfigs.signup.url}`, {
+            method: EndpointsConfigs.signup.method,
             headers: {
                 'Content-Type': 'application/json',
             },

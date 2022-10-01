@@ -1,4 +1,4 @@
-import { Product } from "../../../server/types";
+import { Product } from "@ecommerce/shared";
 
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
 

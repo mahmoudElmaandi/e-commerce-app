@@ -1,5 +1,5 @@
 import { Button, Flex, Link as LinkCH } from "@chakra-ui/react";
-import { Pagination } from "../../../server/api";
+import { Pagination } from "@ecommerce/shared/src/api";
 import { ROOTENDPOINT } from "../env";
 import { Link } from "react-router-dom";
 

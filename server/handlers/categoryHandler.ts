@@ -1,6 +1,6 @@
-import { CreateCategoryRequest, CreateCategoryResponse, GetCategoryResponse, ListCategoriesRequest, ListCategoriesResponse, DeleteCategoryResponse, ExpressHandlerWithParams } from './../api';
+import { CreateCategoryRequest, CreateCategoryResponse, GetCategoryResponse, ListCategoriesRequest, ListCategoriesResponse, DeleteCategoryResponse } from '@ecommerce/shared';
 import { Datastore } from '../datastore/index';
-import { ExpressHandler } from "../api";
+import { ExpressHandler, ExpressHandlerWithParams } from "../types";
 
 export class CategoryHandler {
     private db: Datastore;

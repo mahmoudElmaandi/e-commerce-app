@@ -1,6 +1,6 @@
-import { SignUpRequest, ExpressHandler, SignUpResponse, SignInRequest, SignInResponse } from './../api';
+import { User, SignUpRequest, SignUpResponse, SignInRequest, SignInResponse } from '@ecommerce/shared';
 import { Datastore } from '../datastore';
-import { User } from '../types';
+import { ExpressHandler } from "../types";
 
 export class UserHandler {
     private db: Datastore;

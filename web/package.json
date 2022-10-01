@@ -1,10 +1,12 @@
 {
-  "name": "my-app",
+  "name": "e-commerce-react-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ecommerce/shared": "file:../shared",
     "@chakra-ui/icons": "^2.0.10",
     "@chakra-ui/react": "^2.3.2",
+    "@craco/craco": "^7.0.0-alpha.7",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@testing-library/jest-dom": "^5.16.5",
@@ -24,10 +26,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
   },
   "eslintConfig": {
     "extends": [

@@ -5,7 +5,7 @@ import { db } from './datastore/index';
 import { ProductHandler } from './handlers/productHandler';
 import { Pool } from 'pg';
 import { initDb } from './datastore';
-import { Endpoints, EndpointsConfigs } from './endpoints';
+import { Endpoints, EndpointsConfigs } from '@ecommerce/shared';
 import asyncHandler from "express-async-handler"
 import cors from 'cors';
 

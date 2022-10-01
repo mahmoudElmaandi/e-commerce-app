@@ -1,6 +1,6 @@
 import { Datastore } from './../index';
 import { Pool } from 'pg';
-import { Product, Category, User } from '../../types';
+import { Product, Category, User } from '@ecommerce/shared';
 
 export class pgDatastore implements Datastore {
     private pool: Pool;

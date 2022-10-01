@@ -38,23 +38,3 @@ export interface CreateCategoryResponse { }
 export interface GetCategoryResponse { category: Category }
 
 export interface DeleteCategoryResponse { };
-
-import { RequestHandler } from 'express';
-import exp from 'constants';
-import { type } from 'os';
-
-type WithError<T> = T & { error: string };
-
-export type ExpressHandler<Req, Res> = RequestHandler<
-    string,
-    Partial<WithError<Res>>,
-    Partial<Req>,
-    any
->;
-
-export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
-    Partial<Params>,
-    Partial<WithError<Res>>,
-    Partial<Req>,
-    any
->;

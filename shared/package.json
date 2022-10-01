@@ -1,0 +1,15 @@
+{
+  "name": "@ecommerce/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "npm i && tsc",
+    "tsc": "tsc --init"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
+}

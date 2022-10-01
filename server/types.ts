@@ -1,24 +1,18 @@
-export interface User {
-    id?: string,
-    username: string,
-    password: string,
-    email: string,
-    createdAt?: number
-}
+import { RequestHandler } from 'express';
 
-export interface Product {
-    id?: string,
-    name: string,
-    des: string,
-    image: string,
-    sku: string,
-    price: number,
-    categoryId: string,
-    createdAt?: number
-};
 
-export interface Category {
-    id?: string,
-    name: string,
-    createdAt?: number
-}
+type WithError<T> = T & { error: string };
+
+export type ExpressHandler<Req, Res> = RequestHandler<
+    string,
+    Partial<WithError<Res>>,
+    Partial<Req>,
+    any
+>;
+
+export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
+    Partial<Params>,
+    Partial<WithError<Res>>,
+    Partial<Req>,
+    any
+>;
