@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ROOTENDPOINT } from "../env";
 import { EndpointsConfigs } from "@ecommerce/shared";
+import { PasswordInput } from "../components/password-input";
 
 // TODO: check if user is already logged in
 export const Signin = () => {
@@ -12,12 +13,10 @@ export const Signin = () => {
 
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')
-    const [show, setShow] = useState(false)
 
     const [hasError, setHasError] = useState(false);
     const [error, setError] = useState('');
 
-    const handleClick = () => setShow(!show)
 
     const handleChange = (e: React.SyntheticEvent) => {
         const name = (e.target as HTMLInputElement).name;
@@ -74,17 +73,7 @@ export const Signin = () => {
                     <Input type='text' name="login" placeholder='Username' value={login} onChange={handleChange} />
                 </InputGroup>
 
-                <InputGroup size='sm'>
-                    <Input pr='4.5rem' type={show ? 'text' : 'password'} placeholder='Enter password' size='sm'
-                        name="password" value={password} onChange={handleChange} />
-
-                    <InputRightElement width='4.5rem'>
-                        <Button h='1.75rem' size='sm' onClick={handleClick} >
-                            {show ? <ViewOffIcon color='gray.300' /> : <ViewIcon color='gray.300' />}
-                            {show ? ' Hide ' : ' Show '}
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
+                <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
 
                 <Button colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign In</Button>
             </Stack>

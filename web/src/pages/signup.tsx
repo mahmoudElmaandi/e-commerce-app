@@ -1,5 +1,5 @@
-import { EmailIcon, PhoneIcon, ViewIcon, ViewOffIcon, } from "@chakra-ui/icons"
-import { Alert, AlertIcon, Button, Container, Flex, Input, InputGroup, InputLeftElement, InputRightElement, Stack } from "@chakra-ui/react"
+import { EmailIcon } from "@chakra-ui/icons"
+import { Alert, AlertIcon, Button, Container, Flex, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
 import React, { useState } from "react";
 
 import { ROOTENDPOINT } from "../env";
@@ -13,6 +13,7 @@ You can either move it inside src/, or add a symlink to it from project's node_m
 import { EndpointsConfigs } from "@ecommerce/shared";
 import { useNavigate } from "react-router-dom";
 
+import { PasswordInput } from "../components/password-input";
 
 // TODO: check if user is already logged in
 // TODO: extract password input to its own component
@@ -23,12 +24,11 @@ export const Signup = () => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [show, setShow] = useState(false)
+
 
     const [hasError, setHasError] = useState(false);
     const [error, setError] = useState('');
 
-    const handleClick = () => setShow(!show)
 
     const handleChange = (e: React.SyntheticEvent) => {
         const name = (e.target as HTMLInputElement).name;
@@ -94,17 +94,7 @@ export const Signup = () => {
                     <Input type='email' name="email" placeholder='Email' value={email} onChange={handleChange} />
                 </InputGroup>
 
-                <InputGroup size='sm'>
-                    <Input pr='4.5rem' type={show ? 'text' : 'password'} placeholder='Enter password' size='sm'
-                        name="password" value={password} onChange={handleChange} />
-
-                    <InputRightElement width='4.5rem'>
-                        <Button h='1.75rem' size='sm' onClick={handleClick} >
-                            {show ? <ViewOffIcon color='gray.300' /> : <ViewIcon color='gray.300' />}
-                            {show ? ' Hide ' : ' Show '}
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
+                <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
 
                 <Button colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign Up</Button>
             </Stack>
