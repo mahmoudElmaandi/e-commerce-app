@@ -1,6 +1,6 @@
 import { EmailIcon } from "@chakra-ui/icons"
 import { Alert, AlertIcon, Button, Container, Flex, FormControl, FormErrorMessage, FormHelperText, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ROOTENDPOINT } from "../env";
 
@@ -14,6 +14,7 @@ import { EndpointsConfigs } from "@ecommerce/shared";
 import { useNavigate } from "react-router-dom";
 
 import { PasswordInput } from "../components/password-input";
+import { isLoggedIn, singup } from "../fetch/auth";
 
 // TODO: check if user is already logged in
 // TODO: extract password input to its own component
@@ -49,28 +50,20 @@ export const Signup = () => {
 
         setHasError(false);
 
-        const response = await fetch(`${ROOTENDPOINT}${EndpointsConfigs.signup.url}`, {
-            method: EndpointsConfigs.signup.method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, email, password })
-        });
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const data = await response.json();
-        console.log(data)
-
-        if (response.status === 403) {
-            setHasError(true)
-            setResError(data.error);
-        };
-
-        if (response.status === 200) {
-            localStorage.setItem("jwt", data.jwt)
+        try {
+            await singup(username, email, password)
             navigate('/products')
-        };
+        } catch (error) {
+            setHasError(true)
+            setResError((error as Error).message);
+        }
     };
+
+    useEffect(() => {
+        if (isLoggedIn()) {
+            navigate('/products')
+        }
+    }, [navigate]);
 
     return (
         <Container maxW='md' color='black'>

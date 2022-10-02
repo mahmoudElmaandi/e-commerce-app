@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import { ROOTENDPOINT } from "../env";
+import { getLocalStorageJWT } from "../fetch/auth";
 export const ListProducts = () => {
     let [searchParams, setSearchParams] = useSearchParams();
 
@@ -23,6 +24,7 @@ export const ListProducts = () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": `Bearer ${getLocalStorageJWT()}`
             },
         });
         await new Promise((resolve) => setTimeout(resolve, 500));
