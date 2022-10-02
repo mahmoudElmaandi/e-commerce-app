@@ -16,3 +16,9 @@ export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
     Partial<Req>,
     any
 >;
+
+export interface jwtPayload {
+    userId: string,
+    cartId: string,
+    admin: boolean
+}

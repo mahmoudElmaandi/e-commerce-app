@@ -3,8 +3,9 @@ import { pgDatastore } from './pg';
 import { CategoryDao } from './dao/CategoryDao';
 import { ProductDao } from './dao/ProductDao';
 import { Pool } from 'pg';
+import { CartDao } from './dao/CartDao';
 
-export interface Datastore extends UserDao, ProductDao, CategoryDao { }
+export interface Datastore extends UserDao, ProductDao, CategoryDao, CartDao { }
 
 export let db: Datastore;
 

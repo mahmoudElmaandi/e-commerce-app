@@ -1,6 +1,6 @@
 const APIVER = 'v1';
 
-export type EndpointConfig = { url: string; method: 'get' | 'post' | 'put' | 'delete' };
+export type EndpointConfig = { url: string; method: 'get' | 'post' | 'put' | 'delete'; authenticated?: boolean; authorized?: boolean };
 
 export enum Endpoints {
   signup = 'signup',
@@ -15,6 +15,9 @@ export enum Endpoints {
   getCategory = 'getCategory',
   createCategroy = 'createCategroy',
   deleteCategroy = 'deleteCategroy',
+
+  addCartItem = 'addCartItem',
+
 }
 
 export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
@@ -22,13 +25,16 @@ export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.signup]: { method: 'post', url: `/api/${APIVER}/signup` },
   [Endpoints.signin]: { method: 'post', url: `/api/${APIVER}/signin` },
 
-  [Endpoints.listProducts]: { method: 'get', url: `/api/${APIVER}/products` },
+  [Endpoints.listProducts]: { method: 'get', url: `/api/${APIVER}/products`, authenticated: true },
   [Endpoints.getProduct]: { method: 'get', url: `/api/${APIVER}/products/:id` },
-  [Endpoints.createProduct]: { method: 'post', url: `/api/${APIVER}/products` },
-  [Endpoints.deleteProduct]: { method: 'delete', url: `/api/${APIVER}/products/:id` },
+  [Endpoints.createProduct]: { method: 'post', url: `/api/${APIVER}/products`, authenticated: true, authorized: true },
+  [Endpoints.deleteProduct]: { method: 'delete', url: `/api/${APIVER}/products/:id`, authenticated: true, authorized: true },
 
   [Endpoints.listCategories]: { method: 'get', url: `/api/${APIVER}/categories` },
   [Endpoints.getCategory]: { method: 'get', url: `/api/${APIVER}/categories/:id` },
-  [Endpoints.createCategroy]: { method: 'post', url: `/api/${APIVER}/categories` },
-  [Endpoints.deleteCategroy]: { method: 'delete', url: `/api/${APIVER}/categories` }
+  [Endpoints.createCategroy]: { method: 'post', url: `/api/${APIVER}/categories`, authenticated: true, authorized: true },
+  [Endpoints.deleteCategroy]: { method: 'delete', url: `/api/${APIVER}/categories`, authenticated: true, authorized: true },
+
+  [Endpoints.addCartItem]: { method: 'post', url: `/api/${APIVER}/carts/additem`, authenticated: true, }
+
 };

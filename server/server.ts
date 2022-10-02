@@ -1,3 +1,5 @@
+import { CartHandler } from './handlers/cartHandler';
+import { jwtParseMiddleware, isAuthenticatedMiddleware, isAuthorizedMiddleware } from './middleware/authMiddleware';
 import { UserHandler } from './handlers/userHandler';
 import express, { Express, Request, Response, RequestHandler } from 'express'
 import { CategoryHandler } from './handlers/categoryHandler';
@@ -30,6 +32,7 @@ export async function createServer(pool: Pool) {
     const userHandler = new UserHandler(db);
     const productHandler = new ProductHandler(db);
     const categoryHandler = new CategoryHandler(db);
+    const cartHandler = new CartHandler(db);
 
     const EndpointsHandlers: { [key in Endpoints]: RequestHandler<any, any> } = {
 
@@ -45,12 +48,20 @@ export async function createServer(pool: Pool) {
         [Endpoints.getCategory]: categoryHandler.get,
         [Endpoints.createCategroy]: categoryHandler.create,
         [Endpoints.deleteCategroy]: categoryHandler.delete,
+
+        [Endpoints.addCartItem]: cartHandler.addCartItem,
     };
 
     Object.keys(Endpoints).forEach(entry => {
         const config = EndpointsConfigs[entry as Endpoints];
         const handler = EndpointsHandlers[entry as Endpoints];
-        app[config.method](config.url, asyncHandler(handler));
+        config.authenticated && config.authorized ?
+            app[config.method](config.url, jwtParseMiddleware, isAuthenticatedMiddleware, isAuthorizedMiddleware, asyncHandler(handler))
+            :
+            config.authenticated && !config.authorized ?
+                app[config.method](config.url, jwtParseMiddleware, isAuthenticatedMiddleware, asyncHandler(handler))
+                :
+                app[config.method](config.url, jwtParseMiddleware, asyncHandler(handler));
         // console.log(entry,config,handler)
     });
 

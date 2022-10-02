@@ -1,4 +1,4 @@
-import { User, Product, Category } from './types';
+import { User, Product, Category, CartItem } from './types';
 
 // Users APIs
 export type SignUpRequest = Pick<User, 'username' | 'email' | 'password'>;
@@ -38,3 +38,8 @@ export interface CreateCategoryResponse { }
 export interface GetCategoryResponse { category: Category }
 
 export interface DeleteCategoryResponse { };
+
+
+// Cart 
+export interface AddCartItemRequest extends CartItem { };
+export interface AddCartItemResponse { }

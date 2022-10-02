@@ -1,11 +1,11 @@
 -- Up Migration
-CREATE TABLE Category (
+CREATE TABLE Categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(128) NOT NULL,
     createdAt TIMESTAMP DEFAULT Now()
 );
 
-CREATE TABLE Product (
+CREATE TABLE Products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(128) NOT NULL,
     des TEXT NOT NULL,
@@ -14,11 +14,12 @@ CREATE TABLE Product (
     price NUMERIC(18, 8) NOT NULL,
     categoryId UUID NOT NULL,
     createdAt TIMESTAMP DEFAULT Now(),
+    
     CONSTRAINT FK_Product_Category FOREIGN KEY(categoryId)
-        REFERENCES Category(id)
+        REFERENCES Categories(id)
         ON DELETE CASCADE
 );
 
 -- Down Migration
-DROP TABLE Category;
-DROP TABLE Product;
+DROP TABLE Categories;
+DROP TABLE Products;
