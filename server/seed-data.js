@@ -252,7 +252,8 @@ categories.forEach(async category => {
     const res = await fetch(CREATE_CATEGORY_API, {
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwtToken")}`
         },
         method: "POST",
         body: JSON.stringify({ "name": category })
@@ -260,16 +261,19 @@ categories.forEach(async category => {
 });
 
 const skus = ["010000", "010001", "010002", "020000", "020001", "020002", "030000", "030001", "030002", "040000", "040001", "040002", "100000", "100001", "100002", "CW21001", "CW22001", "CW22002", "EV21001", "EV21002", "EV23001"]
+
 products.forEach(async (product, index) => {
     const { title: name, description: des, price, category: categoryId, image } = product;
     let obj = { name, des, image, price, categoryId }
     obj["sku"] = skus[index];
+    obj["stock"] = index + 1;
 
     console.log(obj)
     const res = await fetch(CREATE_PRODUCT_API, {
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwtToken")}`
         },
         method: "POST",
         body: JSON.stringify(obj)

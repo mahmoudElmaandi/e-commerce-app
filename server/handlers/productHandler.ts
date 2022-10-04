@@ -20,7 +20,8 @@ export class ProductHandler {
             des: req.body.des!,
             image: req.body.image!,
             sku: req.body.sku!,
-            price: req.body.price!
+            price: req.body.price!,
+            stock: req.body.stock
         };
         await this.db.createProduct(product);
         return res.send({});

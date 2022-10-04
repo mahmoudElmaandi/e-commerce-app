@@ -1,3 +1,4 @@
+import { ProductCartItem } from '@ecommerce/shared';
 import { Datastore, db } from './../index';
 import { Pool } from 'pg';
 import { Product, Category, User, CartItem } from '@ecommerce/shared';
@@ -32,11 +33,11 @@ export class pgDatastore implements Datastore {
     };
 
     private async createCart(userID: string): Promise<string> {
-        return (await this.pool.query('INSERT INTO Carts (userID) VALUES ($1) RETURNING id', [userID])).rows[0].id
+        return (await this.pool.query('INSERT INTO Carts (user_id) VALUES ($1) RETURNING id', [userID])).rows[0].id
     };
 
     async getUserCartId(userID: string): Promise<string> {
-        return (await this.pool.query('SELECT id FROM Carts WHERE userId = $1', [userID])).rows[0].id
+        return (await this.pool.query('SELECT id FROM Carts WHERE user_id = $1', [userID])).rows[0].id
     };
 
     async listProducts(page: number = 1, pageSize: number = 10): Promise<Product[]> {
@@ -51,8 +52,8 @@ export class pgDatastore implements Datastore {
     async createProduct(product: Product): Promise<void> {
         const category = await this.getCategoryByName(product.categoryId);
         console.log("category", category)
-        await this.pool.query(`INSERT INTO Products (name,des,image,sku,price,categoryId) VALUES ($1, $2, $3, $4, $5,$6)`,
-            [product.name, product.des, product.image, product.sku, product.price, category?.id]
+        await this.pool.query(`INSERT INTO Products (name,des,image,sku,price,categoryId,stock) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [product.name, product.des, product.image, product.sku, product.price, category?.id, product.stock]
         )
     };
 
@@ -65,8 +66,23 @@ export class pgDatastore implements Datastore {
     };
 
     async addCartItem(cartItem: CartItem): Promise<void> {
-        await this.pool.query(`INSERT INTO CartItems (cartId,productId,quantity) VALUES ($1, $2, $3)`, [cartItem.cartId, cartItem.productId, cartItem.quantity])
+        await this.pool.query(`INSERT INTO CartItems (cart_id,product_id,quantity) VALUES ($1, $2, $3)`, [cartItem.cart_id, cartItem.product_id, cartItem.quantity])
     };
+
+    async listCartItems(cartId: string): Promise<ProductCartItem[]> {
+        return (await this.pool.query(`
+        SELECT ci.id as cart_item_id,ci.quantity,p.id as product_id, p.price, p.name, p.image, p.stock
+        FROM (SELECT id,product_id,quantity FROM cartitems WHERE cart_id = $1) as ci 
+        INNER JOIN products as p ON ci.product_id = p.id`, [cartId])).rows
+    };
+
+    async deleteCartItem(itemId: string): Promise<void> {
+        await this.pool.query(`DELETE FROM CartItems WHERE id = $1`, [itemId])
+    };
+
+    async updateCartItemQuantity(itemId: string, quantity: number): Promise<void> {
+        await this.pool.query(`UPDATE CartItems SET quantity = $1 WHERE id = $2`, [quantity, itemId])
+    }
 
     async listCategrories(): Promise<Category[]> {
         return (await this.pool.query('SELECT * FROM Categories')).rows

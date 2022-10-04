@@ -14,6 +14,7 @@ export interface Product {
     image: string,
     sku: string,
     price: number,
+    stock?: number,
     categoryId: string,
     createdAt?: number
 };
@@ -26,7 +27,17 @@ export interface Category {
 
 export interface CartItem {
     id?: string,
-    cartId: string,
-    productId: string,
+    cart_id?: string,
+    product_id: string,
     quantity: number
+}
+
+export interface ProductCartItem {
+    cart_item_id: string,
+    quantity: number,
+    product_id: string,
+    price: number
+    name: string,
+    image: string,
+    stock?: number
 }

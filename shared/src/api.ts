@@ -1,4 +1,4 @@
-import { User, Product, Category, CartItem } from './types';
+import { User, Product, Category, CartItem, ProductCartItem } from './types';
 
 // Users APIs
 export type SignUpRequest = Pick<User, 'username' | 'email' | 'password'>;
@@ -42,4 +42,13 @@ export interface DeleteCategoryResponse { };
 
 // Cart 
 export interface AddCartItemRequest extends CartItem { };
-export interface AddCartItemResponse { }
+export interface AddCartItemResponse { added: boolean }
+
+export interface ListCartItemsRequest { };
+export interface ListCartItemsResponse { items: ProductCartItem[] }
+
+export interface updateCartItemQuantityRequest { productId: string, itemId: string, quantity: number };
+export interface updateCartItemQuantityResponse { updated: boolean };
+
+export interface deleteCartItemRequest { itemId: string };
+export interface deleteCartItemResponse { deleted: boolean };

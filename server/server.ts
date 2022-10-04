@@ -49,7 +49,10 @@ export async function createServer(pool: Pool) {
         [Endpoints.createCategroy]: categoryHandler.create,
         [Endpoints.deleteCategroy]: categoryHandler.delete,
 
+        [Endpoints.listCartItems]: cartHandler.listCartItems,
         [Endpoints.addCartItem]: cartHandler.addCartItem,
+        [Endpoints.updateCartItemQuantity]: cartHandler.updateCartItemQuantity,
+        [Endpoints.deleteCartItem]: cartHandler.deleteCartItem,
     };
 
     Object.keys(Endpoints).forEach(entry => {

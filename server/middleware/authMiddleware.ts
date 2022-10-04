@@ -19,6 +19,7 @@ export const jwtParseMiddleware: ExpressHandler<any, any> = async (req, res, nex
     }
 
     res.locals.userId = payload.userId;
+    res.locals.cartId = payload.cartId;
     res.locals.admin = payload.admin;
 
     return next()

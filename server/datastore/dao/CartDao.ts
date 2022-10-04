@@ -1,6 +1,9 @@
-import { CartItem } from "@ecommerce/shared"
+import { CartItem, ProductCartItem } from "@ecommerce/shared"
 
 export interface CartDao {
-    getUserCartId(userId: string): Promise<string>
+    listCartItems(cartId: string): Promise<ProductCartItem[]>
+    getUserCartId(userId: string): Promise<string> // used at signing as a param into jwtSign
     addCartItem(cartItem: CartItem): Promise<void>
+    updateCartItemQuantity(itemId: string, quantity: number): Promise<void>
+    deleteCartItem(itemId: string): Promise<void>
 }

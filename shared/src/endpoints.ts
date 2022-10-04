@@ -16,7 +16,10 @@ export enum Endpoints {
   createCategroy = 'createCategroy',
   deleteCategroy = 'deleteCategroy',
 
+  listCartItems = 'listCartItems',
   addCartItem = 'addCartItem',
+  updateCartItemQuantity = 'updateCartItemQuantity',
+  deleteCartItem = 'deleteCartItem',
 
 }
 
@@ -35,6 +38,9 @@ export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.createCategroy]: { method: 'post', url: `/api/${APIVER}/categories`, authenticated: true, authorized: true },
   [Endpoints.deleteCategroy]: { method: 'delete', url: `/api/${APIVER}/categories`, authenticated: true, authorized: true },
 
-  [Endpoints.addCartItem]: { method: 'post', url: `/api/${APIVER}/carts/additem`, authenticated: true, }
+  [Endpoints.listCartItems]: { method: 'get', url: `/api/${APIVER}/carts/listitems`, authenticated: true },
+  [Endpoints.addCartItem]: { method: 'post', url: `/api/${APIVER}/carts/additem`, authenticated: true },
+  [Endpoints.updateCartItemQuantity]: { method: 'put', url: `/api/${APIVER}/carts/updateitem`, authenticated: true },
+  [Endpoints.deleteCartItem]: { method: 'delete', url: `/api/${APIVER}/carts/deleteitem`, authenticated: true }
 
 };
