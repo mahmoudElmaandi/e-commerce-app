@@ -58,3 +58,7 @@ export const singin = async (login: string, password: string): Promise<Response>
 
     return {} as Response
 }
+
+export const signout = () => {
+    localStorage.removeItem(LOCAL_STORAGE_JWT);
+};

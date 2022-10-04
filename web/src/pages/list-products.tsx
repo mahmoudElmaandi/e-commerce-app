@@ -61,10 +61,16 @@ export const ListProducts = () => {
 
     return (
         <>
+
             <Flex gap='2px' marginTop='10px' flexDir='row' align='flex-start' justify='center' flexWrap='wrap'>
-                {products?.map((product: Product) => (
-                    <ProductCard key={product.id} product={product} ></ProductCard>
-                ))}
+                {
+                    products.map((product: Product) => (
+                        <ProductCard key={product.id} product={product} ></ProductCard>
+                    ))
+                }
+                {
+                    products.lenght === 0 && 'No Products'
+                }
             </Flex>
 
             {/* <ReactPaginate
