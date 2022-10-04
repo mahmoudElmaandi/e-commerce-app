@@ -45,7 +45,7 @@ export interface AddCartItemRequest extends CartItem { };
 export interface AddCartItemResponse { added: boolean }
 
 export interface ListCartItemsRequest { };
-export interface ListCartItemsResponse { items: ProductCartItem[] }
+export interface ListCartItemsResponse { items: ProductCartItem[], totalPrice: number }
 
 export interface updateCartItemQuantityRequest { productId: string, itemId: string, quantity: number };
 export interface updateCartItemQuantityResponse { updated: boolean };

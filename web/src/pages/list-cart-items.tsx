@@ -35,19 +35,24 @@ export const ListCartItems = () => {
         return <span>Error: Couldn't load cart items</span>
     }
 
-    const { items } = data as ListCartItemsResponse
+    const { items, totalPrice } = data as ListCartItemsResponse
 
     return (
+        <>
+            <Flex gap='2px' marginTop='10px' flexDir='row' width='100%' align='flex-start' justify='flex-start' flexWrap='wrap'>
+                {
+                    items.map((productCartItem: ProductCartItem, index) => (
+                        <ProductCartItemCard key={index} productCartItem={productCartItem} refetchCartItems={refetchCartItems}  ></ProductCartItemCard>
+                    ))
+                }
+                {
+                    items.length === 0 && 'Cart is empty'
+                }
+            </Flex>
 
-        <Flex gap='2px' marginTop='10px' flexDir='row' width='100%' align='flex-start' justify='flex-start' flexWrap='wrap'>
-            {
-                items.map((productCartItem: ProductCartItem, index) => (
-                    <ProductCartItemCard key={index} productCartItem={productCartItem} refetchCartItems={refetchCartItems}  ></ProductCartItemCard>
-                ))
-            }
-            {
-                items.length === 0 && 'Cart is empty'
-            }
-        </Flex>
+            <Flex justify='center'>
+                <Text fontSize='35px' fontWeight='bold'>    Total:    ${Number(totalPrice).toFixed(2)}</Text>
+            </Flex>
+        </>
     )
 }

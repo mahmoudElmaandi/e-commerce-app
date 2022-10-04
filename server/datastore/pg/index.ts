@@ -69,11 +69,27 @@ export class pgDatastore implements Datastore {
         await this.pool.query(`INSERT INTO CartItems (cart_id,product_id,quantity) VALUES ($1, $2, $3)`, [cartItem.cart_id, cartItem.product_id, cartItem.quantity])
     };
 
-    async listCartItems(cartId: string): Promise<ProductCartItem[]> {
-        return (await this.pool.query(`
+    async listCartItems(cartId: string): Promise<{ items: ProductCartItem[], totalPrice: number }> {
+        const items: ProductCartItem[] = (await this.pool.query(`
         SELECT ci.id as cart_item_id,ci.quantity,p.id as product_id, p.price, p.name, p.image, p.stock
         FROM (SELECT id,product_id,quantity FROM cartitems WHERE cart_id = $1) as ci 
         INNER JOIN products as p ON ci.product_id = p.id`, [cartId])).rows
+
+        const totalPrice = await this.calculateTotalCartPrice(cartId);
+        return { items, totalPrice }
+    };
+
+    private async calculateTotalCartPrice(cartId: string): Promise<number> {
+        return (await this.pool.query(`
+        SELECT SUM(p.price * ci.quantity) as total 
+        FROM (SELECT id,product_id,quantity FROM cartitems WHERE cart_id = $1) as ci 
+        INNER JOIN products as p ON ci.product_id = p.id 
+        `, [cartId])).rows[0].total as number
+    };
+
+    async updateTotalCartPrice(cartId: string): Promise<void> {
+        const totalPrice = await this.calculateTotalCartPrice(cartId);
+        await this.pool.query(`UPDATE Carts SET total = $1 WHERE id =$2`, [totalPrice, cartId])
     };
 
     async deleteCartItem(itemId: string): Promise<void> {

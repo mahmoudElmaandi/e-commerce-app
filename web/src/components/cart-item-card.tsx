@@ -14,10 +14,7 @@ export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, r
     const [hasError, setHasError] = useState(false);
     const [resError, setResError] = useState('');
 
-    const updateQuantity = async (newQuantity: number) => {
-        console.log('quantity', quantity)
-        console.log('cart_item_id', cart_item_id)
-
+    const updateQuantity = useCallback(async (newQuantity: number) => {
         try {
             await callEndpoint<updateCartItemQuantityRequest, updateCartItemQuantityResponse>(EndpointsConfigs.updateCartItemQuantity, {
                 productId: product_id, itemId: cart_item_id, quantity: newQuantity
@@ -25,13 +22,13 @@ export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, r
 
             setHasError(false)
             setQuantity(newQuantity)
-
+            refetchCartItems();
             // navigate(ROUTES.HOME);
         } catch (e) {
             setHasError(true)
             setResError((e as ApiError).message);
         }
-    };
+    }, [refetchCartItems])
 
     const deleteCartItem = useCallback(async (itemId: string) => {
 
@@ -60,6 +57,7 @@ export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, r
             <Flex id="cart-item-right" flexDir='column' m='10px' >
                 <Text fontSize={15} fontWeight='bold' >{name} </Text>
                 <Text fontSize={25} >Stock : {stock} </Text>
+                <Text fontSize={25} >Price : ${Number(price).toFixed(2)} </Text>
                 {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
             </Flex>
 

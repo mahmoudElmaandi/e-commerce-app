@@ -11,8 +11,8 @@ export class CartHandler {
     }
 
     public listCartItems: ExpressHandler<ListCartItemsRequest, ListCartItemsResponse> = async (req, res) => {
-        const productCartItems = await this.db.listCartItems(res.locals.cartId);
-        res.send({ items: productCartItems })
+        const productCartItemsObj = await this.db.listCartItems(res.locals.cartId);
+        res.send(productCartItemsObj)
     };
 
     public addCartItem: ExpressHandler<AddCartItemRequest, AddCartItemResponse> = async (req, res) => {
@@ -40,7 +40,10 @@ export class CartHandler {
 
     public deleteCartItem: ExpressHandler<deleteCartItemRequest, deleteCartItemResponse> = async (req, res) => {
         const { itemId } = req.body;
-        if (!itemId) res.status(400).send({ error: 'missing parameters' })
+        if (!itemId) {
+            res.status(400).send({ error: 'missing parameters' })
+            return
+        }
 
         await this.db.deleteCartItem(itemId as string)
         res.send({ deleted: true })
@@ -60,12 +63,15 @@ export class CartHandler {
             return
         }
 
-        await this.db.updateCartItemQuantity(itemId as string, newQuantity)
+        await this.db.updateCartItemQuantity(itemId as string, newQuantity);
+        await this.db.updateTotalCartPrice(res.locals.cartId);
+
         res.send({ updated: true })
     };
 
+
     private doesProductExistsInCart = async (cartId: string, productId: string) => {
-        return (await this.db.listCartItems(cartId)).some(cartItem => cartItem.product_id == productId)
+        return ((await this.db.listCartItems(cartId)).items).some(cartItem => cartItem.product_id == productId)
     };
 
     private validateQuantity = async (product_id: string, quantity: number): Promise<[boolean, number]> => {

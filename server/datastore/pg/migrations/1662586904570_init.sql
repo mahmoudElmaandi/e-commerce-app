@@ -11,7 +11,7 @@ CREATE TABLE Products (
     des TEXT NOT NULL,
     image TEXT NOT NULL,
     sku VARCHAR(30) NOT NULL,
-    price NUMERIC(18, 8) NOT NULL,
+    price NUMERIC(18, 2) NOT NULL,
     stock INTEGER DEFAULT 0,
     categoryId UUID NOT NULL,
     createdAt TIMESTAMP DEFAULT Now(),
