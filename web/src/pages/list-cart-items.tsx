@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { deleteCartItemRequest, deleteCartItemResponse, EndpointsConfigs, ListCartItemsRequest, ListCartItemsResponse, Product, ProductCartItem } from "@ecommerce/shared";
+import { createCheckoutSessionRequest, createCheckoutSessionResponse, deleteCartItemRequest, deleteCartItemResponse, EndpointsConfigs, ListCartItemsRequest, ListCartItemsResponse, Product, ProductCartItem } from "@ecommerce/shared";
 import { ProductCard } from '../components/product-card';
 import { Box, Flex, Image, Text, Link, Button, Stack, Skeleton } from "@chakra-ui/react"
 
@@ -12,6 +12,16 @@ export const ListCartItems = () => {
     const { data, error, isLoading, isError, refetch: refetchCartItems } = useQuery(['listcartitems'], () =>
         callEndpoint<ListCartItemsRequest, ListCartItemsResponse>(EndpointsConfigs.listCartItems)
     );
+
+    const createCheckoutSession = async () => {
+        try {
+            const { sessionUrl } = await callEndpoint<createCheckoutSessionRequest, createCheckoutSessionResponse>(EndpointsConfigs.createCheckOutSession, {
+                items, totalPrice, success_url: `${window.location.origin}/success`, cancel_url: `${window.location.origin}`
+            });
+            window.location.replace(sessionUrl)
+        } catch (e) {
+        }
+    };
 
     if (isLoading) {
         return (
@@ -50,9 +60,11 @@ export const ListCartItems = () => {
                 }
             </Flex>
 
-            <Flex justify='center'>
+            <Flex justify='center' alignItems='center' gap='5px'>
                 <Text fontSize='35px' fontWeight='bold'>    Total:    ${Number(totalPrice).toFixed(2)}</Text>
+                <Button backgroundColor='darkblue' color='white' onClick={createCheckoutSession}>Checkout</Button>
             </Flex>
+
         </>
     )
 }
