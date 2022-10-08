@@ -4,6 +4,7 @@ export interface User {
     password: string,
     email: string,
     admin?: boolean,
+    stripe_id: string,
     createdAt?: number
 }
 

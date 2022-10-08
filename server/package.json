@@ -9,6 +9,7 @@
     "start": "nodemon index.ts",
     "migrate": "npx node-pg-migrate create user --config-file datastore/pg/database.json --migration-file-language sql",
     "up": "npx node-pg-migrate up  --config-file datastore/pg/database.json",
+    "seed": "node ./seeder/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "repository": {
@@ -20,13 +21,15 @@
   "license": "ISC",
   "dependencies": {
     "@ecommerce/shared": "file:../shared",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "node-pg-migrate": "^6.2.2",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "stripe": "^10.12.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

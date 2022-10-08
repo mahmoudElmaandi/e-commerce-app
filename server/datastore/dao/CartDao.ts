@@ -7,4 +7,6 @@ export interface CartDao {
     updateCartItemQuantity(itemId: string, quantity: number): Promise<void>
     deleteCartItem(itemId: string): Promise<void>
     updateTotalCartPrice(cartId: string): Promise<void>
+    createCheckoutSession(cartId: string): Promise<void>
+    getUserStripeID(userId: string): Promise<string>
 }

@@ -1,6 +1,6 @@
 const APIVER = 'v1';
 
-export type EndpointConfig = { url: string; method: 'get' | 'post' | 'put' | 'delete'; authenticated?: boolean; authorized?: boolean };
+export type EndpointConfig = { url: string; method: 'get' | 'post' | 'put' | 'delete'; rawReq?: boolean; authenticated?: boolean; authorized?: boolean };
 
 export enum Endpoints {
   signup = 'signup',
@@ -21,6 +21,8 @@ export enum Endpoints {
   updateCartItemQuantity = 'updateCartItemQuantity',
   deleteCartItem = 'deleteCartItem',
 
+  createCheckOutSession = 'createCheckOutSession',
+  handleCheckoutSessionEvents = 'handleCheckoutSessionEvents'
 }
 
 export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
@@ -39,8 +41,10 @@ export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.deleteCategroy]: { method: 'delete', url: `/api/${APIVER}/categories`, authenticated: true, authorized: true },
 
   [Endpoints.listCartItems]: { method: 'get', url: `/api/${APIVER}/carts/listitems`, authenticated: true },
-  [Endpoints.addCartItem]: { method: 'post', url: `/api/${APIVER}/carts/additem`, authenticated: true },
-  [Endpoints.updateCartItemQuantity]: { method: 'put', url: `/api/${APIVER}/carts/updateitem`, authenticated: true },
-  [Endpoints.deleteCartItem]: { method: 'delete', url: `/api/${APIVER}/carts/deleteitem`, authenticated: true }
+  [Endpoints.addCartItem]: { method: 'post', url: `/api/${APIVER}/carts/add-item`, authenticated: true },
+  [Endpoints.updateCartItemQuantity]: { method: 'put', url: `/api/${APIVER}/carts/update-item`, authenticated: true },
+  [Endpoints.deleteCartItem]: { method: 'delete', url: `/api/${APIVER}/carts/delete-item`, authenticated: true },
+  [Endpoints.createCheckOutSession]: { method: 'post', url: `/api/${APIVER}/stripe/create-checkout-session`, authenticated: true },
+  [Endpoints.handleCheckoutSessionEvents]: { method: 'post', url: `/api/${APIVER}/stripe/webhook`, rawReq: true },
 
 };

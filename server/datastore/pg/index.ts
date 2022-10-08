@@ -11,7 +11,7 @@ export class pgDatastore implements Datastore {
     }
 
     async createUser(user: User): Promise<[string, string, boolean]> {
-        const { id, admin } = (await this.pool.query('INSERT INTO Users (username,email,password) VALUES ($1, $2, $3 ) RETURNING id,admin', [user.username, user.email, user.password])).rows[0]
+        const { id, admin } = (await this.pool.query('INSERT INTO Users (username,email,password,stripe_id) VALUES ($1, $2, $3 ,$4) RETURNING id,admin', [user.username, user.email, user.password, user.stripe_id])).rows[0]
         const cartId = await this.createCart(id)
         return [id, cartId, admin]
     };
@@ -82,7 +82,7 @@ export class pgDatastore implements Datastore {
     private async calculateTotalCartPrice(cartId: string): Promise<number> {
         return (await this.pool.query(`
         SELECT SUM(p.price * ci.quantity) as total 
-        FROM (SELECT id,product_id,quantity FROM cartitems WHERE cart_id = $1) as ci 
+        FROM (SELECT product_id,quantity FROM cartitems WHERE cart_id = $1) as ci 
         INNER JOIN products as p ON ci.product_id = p.id 
         `, [cartId])).rows[0].total as number
     };
@@ -98,6 +98,14 @@ export class pgDatastore implements Datastore {
 
     async updateCartItemQuantity(itemId: string, quantity: number): Promise<void> {
         await this.pool.query(`UPDATE CartItems SET quantity = $1 WHERE id = $2`, [quantity, itemId])
+    }
+
+    async createCheckoutSession(cartId: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    };
+
+    async getUserStripeID(userId: string): Promise<string> {
+        return (await this.pool.query('SELECT stripe_id FROM Users WHERE id = $1', [userId])).rows[0].stripe_id
     }
 
     async listCategrories(): Promise<Category[]> {

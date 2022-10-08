@@ -3,17 +3,20 @@ import { jwtParseMiddleware, isAuthenticatedMiddleware, isAuthorizedMiddleware }
 import { UserHandler } from './handlers/userHandler';
 import express, { Express, Request, Response, RequestHandler } from 'express'
 import { CategoryHandler } from './handlers/categoryHandler';
-import { db } from './datastore/index';
 import { ProductHandler } from './handlers/productHandler';
 import { Pool } from 'pg';
-import { initDb } from './datastore';
+import { initDb, db } from './datastore';
 import { Endpoints, EndpointsConfigs } from '@ecommerce/shared';
 import asyncHandler from "express-async-handler"
 import cors from 'cors';
+import { initPaymentGateway, stripeGateway } from './payment';
+import bodyParser from 'body-parser';
+import { bodyParserMiddleware } from './middleware/bodyBufferMiddleware';
 
-export async function createServer(pool: Pool) {
+export async function createServer(pool: Pool, stripeSK: string) {
 
     await initDb(pool);
+    await initPaymentGateway(stripeSK);
 
     const app: Express = express();
 
@@ -23,16 +26,19 @@ export async function createServer(pool: Pool) {
     });
 
     app.use(cors())
-    app.use(express.json());
+    // app.use(express.json());
 
     app.get('/', (req: Request, res: Response) => {
         res.send('home')
     });
 
-    const userHandler = new UserHandler(db);
+    // Use JSON parser for all non-webhook routes, and pass raw request for stripe to verify.
+    app.use(bodyParserMiddleware);
+
+    const userHandler = new UserHandler(db, stripeGateway);
     const productHandler = new ProductHandler(db);
     const categoryHandler = new CategoryHandler(db);
-    const cartHandler = new CartHandler(db);
+    const cartHandler = new CartHandler(db, stripeGateway);
 
     const EndpointsHandlers: { [key in Endpoints]: RequestHandler<any, any> } = {
 
@@ -53,6 +59,9 @@ export async function createServer(pool: Pool) {
         [Endpoints.addCartItem]: cartHandler.addCartItem,
         [Endpoints.updateCartItemQuantity]: cartHandler.updateCartItemQuantity,
         [Endpoints.deleteCartItem]: cartHandler.deleteCartItem,
+
+        [Endpoints.createCheckOutSession]: cartHandler.createCheckoutSession,
+        [Endpoints.handleCheckoutSessionEvents]: cartHandler.handleCheckoutSessionEvents,
     };
 
     Object.keys(Endpoints).forEach(entry => {
@@ -61,10 +70,12 @@ export async function createServer(pool: Pool) {
         config.authenticated && config.authorized ?
             app[config.method](config.url, jwtParseMiddleware, isAuthenticatedMiddleware, isAuthorizedMiddleware, asyncHandler(handler))
             :
-            config.authenticated && !config.authorized ?
+            config.authenticated && !config.rawReq && !config.authorized ?
                 app[config.method](config.url, jwtParseMiddleware, isAuthenticatedMiddleware, asyncHandler(handler))
-                :
-                app[config.method](config.url, jwtParseMiddleware, asyncHandler(handler));
+                : config.rawReq ?
+                    app[config.method](config.url, bodyParser.raw({ type: 'application/json' }), asyncHandler(handler))
+                    :
+                    app[config.method](config.url, jwtParseMiddleware, asyncHandler(handler));
         // console.log(entry,config,handler)
     });
 
