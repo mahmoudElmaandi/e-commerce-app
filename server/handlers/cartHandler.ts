@@ -1,5 +1,5 @@
 import { StripePaymentGateway } from './../payment/index';
-import { AddCartItemRequest, AddCartItemResponse, CartItem, ERRORS, ListCartItemsRequest, ListCartItemsResponse, deleteCartItemRequest, deleteCartItemResponse, updateCartItemQuantityRequest, updateCartItemQuantityResponse, createCheckoutSessionRequest, createCheckoutSessionResponse } from '@ecommerce/shared';
+import { AddCartItemRequest, AddCartItemResponse, CartItem, ERRORS, ListCartItemsRequest, ListCartItemsResponse, deleteCartItemRequest, deleteCartItemResponse, updateCartItemQuantityRequest, updateCartItemQuantityResponse, createCheckoutSessionRequest, createCheckoutSessionResponse, User } from '@ecommerce/shared';
 import { Datastore } from '../datastore';
 import { ExpressHandler } from './../types';
 import Stripe from 'stripe';
@@ -104,19 +104,23 @@ export class CartHandler {
             return res.status(400).send({ error: (err as Error).message });
         }
 
+
         console.log("coming event", event.type)
 
         // Handle the checkout.session.completed event
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object as Stripe.Checkout.Session;
-            console.log("Fulfilling order", session);
+            // console.log("Fulfilling order", session);
 
             // TODO: fill me in
-            // Saving a copy of the order in database.
-            // Delete temporary cart items 
-            // Update Products Stock
             if (session.payment_status === 'paid') {
-                // fulfillOrder(session);
+                // get userId and cartID 
+                const userId = await this.db.getUserIdByStripeId(session.customer as string);
+                const cartId = await this.db.getUserCartId(userId)
+                // Saving a copy of the order in database.
+                // Delete temporary cart items 
+                // Update Products Stock
+                await this.db.fulfillOrder(userId, cartId, session.amount_total as number / 100)
             }
         }
 

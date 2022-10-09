@@ -2,9 +2,8 @@ import { verifyJWT } from './../auth';
 import { jwtPayload } from './../types';
 import { ExpressHandler } from "../types";
 import { TokenExpiredError, VerifyErrors } from 'jsonwebtoken';
-export const jwtParseMiddleware: ExpressHandler<any, any> = async (req, res, next) => {
-    // Use body-parser to retrieve the raw body as a buffer
 
+export const jwtParseMiddleware: ExpressHandler<any, any> = async (req, res, next) => {
     const jwt = req.headers.authorization?.split(' ')[1];
     if (!jwt) return next();
     let payload: jwtPayload;

@@ -5,5 +5,6 @@ export interface UserDao {
     getUserById(id: string): Promise<User | undefined>;
     getUserByEmail(email: string): Promise<User | undefined>;
     getUserByUsername(username: string): Promise<User | undefined>;
+    getUserIdByStripeId(stripeId: string): Promise<string> // used when fulfilling order
     deleteUser(id: string): Promise<void>;
 };

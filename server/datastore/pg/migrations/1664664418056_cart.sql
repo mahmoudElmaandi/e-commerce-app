@@ -2,10 +2,10 @@
 CREATE TABLE Carts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
-    total NUMERIC(18, 8) NOT NULL DEFAULT 0,
+    total NUMERIC(18, 2) NOT NULL DEFAULT 0,
     createdAt TIMESTAMP DEFAULT Now(),
 
-    CONSTRAINT FK_User_Cart FOREIGN KEY(user_Id)
+    CONSTRAINT FK_User_Cart FOREIGN KEY(user_id)
         REFERENCES Users(id)
         ON DELETE CASCADE
 );

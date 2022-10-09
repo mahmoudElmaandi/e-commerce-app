@@ -1,4 +1,4 @@
-import { ProductCartItem } from '@ecommerce/shared';
+import { Order, ProductCartItem, ProductOrderItem } from '@ecommerce/shared';
 import { Datastore, db } from './../index';
 import { Pool } from 'pg';
 import { Product, Category, User, CartItem } from '@ecommerce/shared';
@@ -26,6 +26,10 @@ export class pgDatastore implements Datastore {
 
     async getUserByUsername(username: string): Promise<User | undefined> {
         return (await this.pool.query('SELECT * FROM Users WHERE username = $1', [username])).rows[0]
+    };
+
+    async getUserIdByStripeId(stripeId: string): Promise<string> {
+        return (await this.pool.query('SELECT * FROM Users WHERE stripe_id = $1', [stripeId])).rows[0].id
     };
 
     async deleteUser(id: string): Promise<void> {
@@ -63,6 +67,10 @@ export class pgDatastore implements Datastore {
 
     async deleteProduct(productId: string): Promise<void> {
         await this.pool.query('DELETE FROM Products WHERE id = $1', [productId])
+    };
+
+    private async updateProductStock(productId: string, quantity: number) {
+        await this.pool.query(`UPDATE Products SET stock = stock-$1 WHERE id = $2`, [quantity, productId])
     };
 
     async addCartItem(cartItem: CartItem): Promise<void> {
@@ -107,6 +115,41 @@ export class pgDatastore implements Datastore {
     async getUserStripeID(userId: string): Promise<string> {
         return (await this.pool.query('SELECT stripe_id FROM Users WHERE id = $1', [userId])).rows[0].stripe_id
     }
+
+    private async emptyCart(cartID: string) {
+        await this.pool.query(`DELETE FROM CartItems WHERE cart_id = $1`, [cartID])
+    };
+
+    async listOrderItems(userId: string): Promise<ProductOrderItem[]> {
+        const ordersID = (await this.pool.query(`SELECT id FROM Orders WHERE user_id = $1`, [userId])).rows;
+        let orderItemsList = []
+        for (let index = 0; index < ordersID.length; index++) {
+            const { id: orderID } = ordersID[index];
+            const orderItems = await this.getOrderItems(orderID)
+            orderItemsList.push(...orderItems)
+        }
+        return orderItemsList
+    };
+
+    private async getOrderItems(orderId: string): Promise<ProductOrderItem[]> {
+        return (await this.pool.query(`
+        SELECT oi.id as order_item_id, oi.createdAt ,oi.quantity,p.id as product_id, p.name, p.image
+        FROM (SELECT id,product_id,quantity, createdat FROM OrderItems WHERE order_id = $1) as oi 
+        INNER JOIN products as p ON oi.product_id = p.id`, [orderId])).rows
+    };
+
+    async fulfillOrder(userId: string, cartId: string, total: number): Promise<void> {
+        const orderId = (await this.pool.query(`INSERT INTO Orders (user_id,total) VALUES ($1, $2) RETURNING id`, [userId, total])).rows[0].id
+
+        const { items } = await this.listCartItems(cartId);
+
+        for (let index = 0; index < items.length; index++) {
+            const { product_id, quantity } = items[index];
+            await this.pool.query(`INSERT INTO OrderItems (order_id,product_id,quantity) VALUES ($1, $2, $3 )`, [orderId, product_id, quantity])
+            await this.updateProductStock(product_id, quantity)
+        }
+        await this.emptyCart(cartId)
+    };
 
     async listCategrories(): Promise<Category[]> {
         return (await this.pool.query('SELECT * FROM Categories')).rows

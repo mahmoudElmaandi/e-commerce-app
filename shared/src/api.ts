@@ -1,4 +1,4 @@
-import { User, Product, Category, CartItem, ProductCartItem } from './types';
+import { User, Product, Category, CartItem, ProductCartItem, ProductOrderItem } from './types';
 
 // Users APIs
 export type SignUpRequest = Pick<User, 'username' | 'email' | 'password'>;
@@ -55,3 +55,8 @@ export interface deleteCartItemResponse { deleted: boolean };
 
 export interface createCheckoutSessionRequest { items: ProductCartItem[], totalPrice: number, success_url: string, cancel_url: string };
 export interface createCheckoutSessionResponse { sessionUrl: string };
+
+
+// Orders 
+export interface ListOrderItemsRequest { };
+export interface ListOrderItemsResponse { items: ProductOrderItem[] }

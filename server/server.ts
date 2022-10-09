@@ -1,3 +1,4 @@
+import { OrderHandler } from './handlers/orderHandler';
 import { CartHandler } from './handlers/cartHandler';
 import { jwtParseMiddleware, isAuthenticatedMiddleware, isAuthorizedMiddleware } from './middleware/authMiddleware';
 import { UserHandler } from './handlers/userHandler';
@@ -39,6 +40,7 @@ export async function createServer(pool: Pool, stripeSK: string) {
     const productHandler = new ProductHandler(db);
     const categoryHandler = new CategoryHandler(db);
     const cartHandler = new CartHandler(db, stripeGateway);
+    const orderHandler = new OrderHandler(db);
 
     const EndpointsHandlers: { [key in Endpoints]: RequestHandler<any, any> } = {
 
@@ -62,6 +64,9 @@ export async function createServer(pool: Pool, stripeSK: string) {
 
         [Endpoints.createCheckOutSession]: cartHandler.createCheckoutSession,
         [Endpoints.handleCheckoutSessionEvents]: cartHandler.handleCheckoutSessionEvents,
+
+        [Endpoints.listOrderItems]: orderHandler.listOrderItems,
+
     };
 
     Object.keys(Endpoints).forEach(entry => {

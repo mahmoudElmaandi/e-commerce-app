@@ -22,7 +22,9 @@ export enum Endpoints {
   deleteCartItem = 'deleteCartItem',
 
   createCheckOutSession = 'createCheckOutSession',
-  handleCheckoutSessionEvents = 'handleCheckoutSessionEvents'
+  handleCheckoutSessionEvents = 'handleCheckoutSessionEvents',
+
+  listOrderItems = 'listOrderItems'
 }
 
 export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
@@ -46,5 +48,7 @@ export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.deleteCartItem]: { method: 'delete', url: `/api/${APIVER}/carts/delete-item`, authenticated: true },
   [Endpoints.createCheckOutSession]: { method: 'post', url: `/api/${APIVER}/stripe/create-checkout-session`, authenticated: true },
   [Endpoints.handleCheckoutSessionEvents]: { method: 'post', url: `/api/${APIVER}/stripe/webhook`, rawReq: true },
+
+  [Endpoints.listOrderItems]: { method: 'get', url: `/api/${APIVER}/orders`, authenticated: true }
 
 };

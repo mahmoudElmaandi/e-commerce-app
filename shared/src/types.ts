@@ -42,3 +42,19 @@ export interface ProductCartItem {
     image: string,
     stock?: number
 }
+
+export interface Order {
+    id?: string,
+    user_id: string,
+    total: number
+}
+
+export interface ProductOrderItem {
+    id?: string,
+    order_id: string,
+    product_id: string,
+    quantity: number,
+    name: string,
+    image: string,
+    createdat: number
+}
