@@ -18,8 +18,9 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 const Links = [
-    ['Products', '/product'],
-    ['Cart', '/cart']
+    ['Products', '/products'],
+    ['Cart', '/cart'],
+    ['Orders', '/orders']
 ];
 
 const NavLink = ({ url, children }: { url: string, children: ReactNode }) => (
@@ -51,7 +52,7 @@ export const NavBar = () => {
                         onClick={isOpen ? onClose : onOpen}
                     />
                     <HStack spacing={8} alignItems={'center'}>
-                        <Box>Logo</Box>
+                        <Box>E-Commerce</Box>
                         <HStack
                             as={'nav'}
                             spacing={4}

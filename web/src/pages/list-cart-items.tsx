@@ -1,11 +1,9 @@
+import { Button, Flex, Skeleton, Square, Text } from "@chakra-ui/react";
+import { createCheckoutSessionRequest, createCheckoutSessionResponse, EndpointsConfigs, ListCartItemsRequest, ListCartItemsResponse, ProductCartItem } from "@ecommerce/shared";
 import { useQuery } from 'react-query';
-import { createCheckoutSessionRequest, createCheckoutSessionResponse, deleteCartItemRequest, deleteCartItemResponse, EndpointsConfigs, ListCartItemsRequest, ListCartItemsResponse, Product, ProductCartItem } from "@ecommerce/shared";
-import { ProductCard } from '../components/product-card';
-import { Box, Flex, Image, Text, Link, Button, Stack, Skeleton } from "@chakra-ui/react"
 
-import { ApiError, callEndpoint } from "../fetch";
 import { ProductCartItemCard } from '../components/cart-item-card';
-import { useCallback, useState } from 'react';
+import { callEndpoint } from "../fetch";
 
 export const ListCartItems = () => {
 
@@ -27,15 +25,15 @@ export const ListCartItems = () => {
         return (
             <>
                 <Flex gap='10px' marginTop='10px' flexDir='row' align='flex-start' justify='center' flexWrap='wrap'>
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
                 </Flex>
             </>
         )
@@ -48,23 +46,27 @@ export const ListCartItems = () => {
     const { items, totalPrice } = data as ListCartItemsResponse
 
     return (
-        <>
-            <Flex gap='2px' marginTop='10px' flexDir='row' width='100%' align='flex-start' justify='flex-start' flexWrap='wrap'>
+        <Flex flexDir='row' alignItems='center' justifyItems='center' flexWrap='wrap-reverse'>
+
+            <Flex id='cart-items' width='80%' flexDir='row' align='flex-start' justify='center' flexWrap='wrap' gap='10px' margin='5px' marginTop='10px' >
                 {
                     items.map((productCartItem: ProductCartItem, index) => (
                         <ProductCartItemCard key={index} productCartItem={productCartItem} refetchCartItems={refetchCartItems}  ></ProductCartItemCard>
                     ))
                 }
+                {items.length === 0 && 'Cart is empty'}
+            </Flex>
+
+            <Flex id='checkout' flexDir='column' alignItems='center' justifyItems='center' marginTop='10px' p='10px' gap='5px'>
+                <Text fontSize='25px' fontWeight='bold'> Total: ${Number(totalPrice).toFixed(2)}</Text>
                 {
-                    items.length === 0 && 'Cart is empty'
+                    items.length !== 0 && <Button width='100%' backgroundColor='darkblue' color='white' onClick={createCheckoutSession}>Checkout</Button>
                 }
             </Flex>
 
-            <Flex justify='center' alignItems='center' gap='5px'>
-                <Text fontSize='35px' fontWeight='bold'>    Total:    ${Number(totalPrice).toFixed(2)}</Text>
-                <Button backgroundColor='darkblue' color='white' onClick={createCheckoutSession}>Checkout</Button>
-            </Flex>
+        </Flex>
 
-        </>
+
+
     )
 }

@@ -1,4 +1,3 @@
-import './App.css';
 import { ListProducts } from "./pages/list-products";
 
 import { Routes, Route } from "react-router-dom";
@@ -8,6 +7,7 @@ import { UserDashboard } from './pages/user-dashboard';
 import { ListCartItems } from './pages/list-cart-items';
 import { SucceededPayment } from './pages/payment-success';
 import { NavBar } from './components/nav-bar';
+import { ListOrdersItems } from './pages/list-order-items';
 
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
         <Route path='/user' element={<UserDashboard />} />
         <Route path='/cart' element={<ListCartItems />} />
         <Route path='/success' element={<SucceededPayment />} />
+        <Route path='/orders' element={<ListOrdersItems />} />
       </Routes>
     </>
   );

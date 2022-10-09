@@ -22,19 +22,23 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     }
 
     return (
-        <Flex id="product" flexDir='column' alignItems='center' justifyItems={'flex-start'} flexWrap={'wrap'} >
+        <Flex id="product" flexDir='column' alignItems='center' justifyItems='flex-start'
+            width='100%' maxWidth='350px' height='300px' maxHeight='300px'
+            padding='5px' border='2px solid white' borderRadius='5px' boxShadow='lg'>
 
-            <Flex id="product-left" width='150px' height='120px'>
-                <Image src={image} width='150px' maxWidth='150px' ></Image>
+
+            <Flex id="product-image" width='150px' height='120px'>
+                <Image src={image} width='150px' maxWidth='150px' height='120px' maxHeight='120px' ></Image>
             </Flex>
 
-            <Flex id="product-right" maxWidth={'500px'} flexDir='column' m='10px' backgroundColor='beige'>
+            <Flex id="product-info" width='300px' maxWidth='500px' height='80px' maxHeight='100px' flexDir='column' m='10px'>
                 <Text fontSize={15} fontWeight='bold' >{name} </Text>
             </Flex>
-            <Button disabled={stock === 0} onClick={async () => { await addToCart() }}>Add to Cart</Button>
 
-            {hasError || stock === 0 ? <Alert status='warning' m='5px'><AlertIcon /> {resError || ERRORS.OUT_OF_STOCK} </Alert> : ''}
-
+            <Flex id="product-controls" width='300px' maxWidth='500px' flexDir='column'>
+                <Button disabled={stock === 0} onClick={async () => { await addToCart() }}>Add to Cart ${price}</Button>
+                {hasError || stock === 0 ? <Alert status='warning' m='5px'><AlertIcon /> {resError || ERRORS.OUT_OF_STOCK} </Alert> : ''}
+            </Flex>
         </Flex >
     )
 };

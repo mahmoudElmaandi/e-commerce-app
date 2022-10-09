@@ -7,8 +7,8 @@ import { ApiError, callEndpoint } from "../fetch";
 export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, refetchCartItems: Function }> = ({ productCartItem, refetchCartItems }) => {
     const { product_id, cart_item_id, name, price, quantity: comingQuantity, image, stock } = productCartItem;
 
-    console.log('productCartItem', productCartItem)
-    console.log('cartItem_id', cart_item_id)
+    // console.log('productCartItem', productCartItem)
+    // console.log('cartItem_id', cart_item_id)
 
     const [quantity, setQuantity] = useState(comingQuantity)
     const [hasError, setHasError] = useState(false);
@@ -48,20 +48,30 @@ export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, r
 
     return (
 
-        <Flex id="product" alignItems='center'  >
+        <Flex id="cart-item" flexDir='column' alignItems='center' justifyItems='center'
+            width='100%' maxWidth='350px' height='310px' maxHeight='500px'
+            padding='5px' border='2px solid white' borderRadius='5px' boxShadow='lg'>
 
-            <Flex id="cart-item-left" width='150px' height='120px'>
-                <Image src={image} width='150px' maxWidth='150px' ></Image>
+            <Flex id="cart-item-image" width='150px' height='120px' maxHeight='120px'>
+                <Image src={image} width='150px' maxWidth='150px' height='120px' maxHeight='120px' ></Image>
             </Flex>
 
-            <Flex id="cart-item-right" flexDir='column' m='10px' >
-                <Text fontSize={15} fontWeight='bold' >{name} </Text>
-                <Text fontSize={25} >Stock : {stock} </Text>
-                <Text fontSize={25} >Price : ${Number(price).toFixed(2)} </Text>
-                {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
+            <Flex id="cart-item-info" flexDir='column' alignItems='center' justifyItems='center'
+                height='150px' maxHeight='150px' flexWrap='wrap' >
+
+                <Flex width='300px' maxWidth='500px' height='80px' maxHeight='100px'  >
+                    <Text fontSize={15} fontWeight='bold' >{name} </Text>
+                </Flex>
+
+                <Flex flexDir='row' gap='10px'>
+                    <Text fontSize={25} >Stock : {stock} </Text>
+                    <Text fontSize={25} >Price : ${Number(price).toFixed(2)} </Text>
+                    {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
+                </Flex>
+
             </Flex>
 
-            <Flex id="cart-item-right" gap='5px' flexDir='row' m='10px'>
+            <Flex id="cart-item-controls" gap='5px' flexDir='row'>
 
                 <IconButton
                     onClick={async () => { await deleteCartItem(cart_item_id) }}

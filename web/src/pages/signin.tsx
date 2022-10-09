@@ -1,10 +1,7 @@
-import { ViewIcon, ViewOffIcon, } from "@chakra-ui/icons"
-import { Alert, AlertIcon, Button, Container, FormControl, FormErrorMessage, Input, InputGroup, InputRightElement, Stack } from "@chakra-ui/react"
+import { Alert, AlertIcon, Button, Container, FormControl, FormErrorMessage, Input, InputGroup, Stack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ROOTENDPOINT } from "../env";
-import { EndpointsConfigs } from "@ecommerce/shared";
 import { PasswordInput } from "../components/password-input";
 import { isLoggedIn, singin } from "../fetch/auth";
 

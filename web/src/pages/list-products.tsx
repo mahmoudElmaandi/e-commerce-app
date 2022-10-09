@@ -1,14 +1,9 @@
-import React, { useState } from "react";
-import { useQuery } from 'react-query';
+import { Flex, Skeleton } from "@chakra-ui/react";
 import { Product } from "@ecommerce/shared";
-import { ProductCard } from '../components/product-card';
-import { Box, Flex, Image, Text, Link, Button, Stack, Skeleton } from "@chakra-ui/react"
+import { useQuery } from 'react-query';
+import { useSearchParams } from "react-router-dom";
 import { Paginator } from "../components/paginator";
-import {
-    NavLink,
-    Outlet,
-    useSearchParams,
-} from "react-router-dom";
+import { ProductCard } from '../components/product-card';
 
 import { ROOTENDPOINT } from "../env";
 import { getLocalStorageJWT } from "../fetch/auth";
@@ -39,15 +34,14 @@ export const ListProducts = () => {
         return (
             <>
                 <Flex gap='10px' marginTop='10px' flexDir='row' align='flex-start' justify='center' flexWrap='wrap'>
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
-                    <Skeleton width='360px' height='170px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
+                    <Skeleton width='350px' height='300px' borderRadius='13px' />
                 </Flex>
             </>
         )
@@ -62,26 +56,15 @@ export const ListProducts = () => {
     return (
         <>
 
-            <Flex gap='2px' marginTop='10px' flexDir='row' align='flex-start' justify='center' flexWrap='wrap'>
+            <Flex gap='10px' margin='5px' marginTop='10px' flexDir='row' align='flex-start' justify='center' flexWrap='wrap'>
                 {
                     products.map((product: Product) => (
                         <ProductCard key={product.id} product={product} ></ProductCard>
                     ))
                 }
-                {
-                    products.lenght === 0 && 'No Products'
-                }
+                {products.lenght === 0 && 'No Products'}
             </Flex>
 
-            {/* <ReactPaginate
-                breakLabel="..."
-                nextLabel="next >"
-                // onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
-                pageCount={pagination["noPages"]}
-                previousLabel="< previous"
-            // renderOnZeroPageCount={null}
-            /> */}
             <Paginator refetch={setSearchParams} pagination={{ currentPage: page, pageSize, total: pagination["total"] }}  ></Paginator>
         </>
     )
