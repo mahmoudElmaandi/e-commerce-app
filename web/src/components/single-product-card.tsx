@@ -1,0 +1,122 @@
+import {
+    Box,
+    Container,
+    Stack,
+    Text,
+    Image,
+    Flex,
+    VStack,
+    Button,
+    Heading,
+    SimpleGrid,
+    StackDivider,
+    useColorModeValue,
+    List,
+    ListItem,
+    Alert,
+    AlertIcon,
+} from '@chakra-ui/react';
+import { AddCartItemRequest, AddCartItemResponse, EndpointsConfigs, ERRORS, GetProductResponse } from '@ecommerce/shared';
+import { useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
+import { ApiError, callEndpoint } from '../fetch';
+
+export const SingleProductCard = () => {
+    const { product } = useLoaderData() as GetProductResponse;
+    const { id, name, image, des, sku, stock, categoryId, price } = product;
+
+    const [hasError, setHasError] = useState(false);
+    const [resError, setResError] = useState('');
+
+    const addToCart = async () => {
+        try {
+            await callEndpoint<AddCartItemRequest, AddCartItemResponse>(EndpointsConfigs.addCartItem, {
+                product_id: id as string, quantity: 1
+            });
+            setHasError(false)
+        } catch (e) {
+            setHasError(true)
+            setResError((e as ApiError).message);
+        }
+    }
+
+    return (
+        <Container maxW={'7xl'} >
+            <SimpleGrid
+                id='product'
+                columns={{ base: 1, lg: 2 }}
+                spacing={{ base: 8, md: 10 }}
+                py={{ base: 18, md: 10 }}>
+                <Flex>
+                    <Image rounded={'md'} alt={'product image'} src={image} fit={'cover'} align={'center'} w={'100%'}
+                        h={{ base: '100%', sm: '400px', lg: '500px' }}
+                    />
+                </Flex>
+                <Stack spacing={{ base: 6, md: 10 }}>
+                    <Box as={'header'}>
+                        <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
+                            {name}
+                        </Heading>
+                        <Text color={useColorModeValue('gray.900', 'gray.400')} fontWeight={300} fontSize={'2xl'}>
+                            ${price} USD
+                        </Text>
+                    </Box>
+
+                    <Stack spacing={{ base: 4, sm: 6 }} direction={'column'} divider={
+                        <StackDivider
+                            borderColor={useColorModeValue('gray.200', 'gray.600')}
+                        />
+                    }>
+                        <VStack spacing={{ base: 4, sm: 6 }}>
+                            <Text fontSize={'lg'}> {des} </Text>
+                        </VStack>
+                        <Box>
+                            <Text
+                                fontSize={{ base: '16px', lg: '18px' }}
+                                color={useColorModeValue('yellow.500', 'yellow.300')}
+                                fontWeight={'500'}
+                                textTransform={'uppercase'}
+                                mb={'4'}>
+                                Product Detais
+                            </Text>
+
+                            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+                                <List spacing={2}>
+                                    <ListItem>Sku</ListItem>
+                                    <ListItem>Stock</ListItem>
+                                </List>
+                                <List spacing={2}>
+                                    <ListItem>{sku}</ListItem>
+                                    <ListItem>{stock}</ListItem>
+                                </List>
+                            </SimpleGrid>
+                        </Box>
+                    </Stack>
+
+                    <Button
+                        onClick={addToCart}
+                        rounded={'none'}
+                        w={'full'}
+                        mt={8}
+                        size={'lg'}
+                        py={'7'}
+                        bg={useColorModeValue('gray.900', 'gray.50')}
+                        color={useColorModeValue('white', 'gray.900')}
+                        textTransform={'uppercase'}
+                        _hover={{
+                            transform: 'translateY(2px)',
+                            boxShadow: 'lg',
+                        }}>
+                        Add to cart
+                    </Button>
+                    {hasError || stock === 0 ? <Alert status='warning' m='5px'><AlertIcon /> {resError || ERRORS.OUT_OF_STOCK} </Alert> : ''}
+                    {/* 
+                    <Stack direction="row" alignItems="center" justifyContent={'center'}>
+                        <MdLocalShipping /> 
+                        { <Text>2-3 business days delivery</Text>
+                    </Stack> */}
+                </Stack>
+            </SimpleGrid>
+        </Container >
+    );
+}

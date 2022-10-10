@@ -3,6 +3,8 @@ import { AddCartItemRequest, AddCartItemResponse, EndpointsConfigs, ERRORS, Prod
 import { Box, Flex, Image, Text, Button, Alert, AlertIcon } from "@chakra-ui/react"
 import { ApiError, callEndpoint } from "../fetch";
 
+import { Link } from 'react-router-dom';
+
 export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     const { id, name, des, image, price, sku, stock } = product;
 
@@ -32,7 +34,7 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             </Flex>
 
             <Flex id="product-info" width='300px' maxWidth='500px' height='80px' maxHeight='100px' flexDir='column' m='10px'>
-                <Text fontSize={15} fontWeight='bold' >{name} </Text>
+                <Link to={id!}>  <Text fontSize={15} fontWeight='bold' >{name} </Text></Link>
             </Flex>
 
             <Flex id="product-controls" width='300px' maxWidth='500px' flexDir='column'>

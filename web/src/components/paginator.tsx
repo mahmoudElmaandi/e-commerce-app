@@ -1,27 +1,32 @@
-import { Button, Flex, Link as LinkCH } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { Pagination } from "@ecommerce/shared/src/api";
-import { ROOTENDPOINT } from "../env";
-import { Link } from "react-router-dom";
+import { Link as RRLink } from "react-router-dom";
 
-export const Paginator: React.FC<{ pagination: Pagination, refetch: Function }> = ({ pagination, refetch }) => {
+export const Paginator: React.FC<{ pagination: Pagination, changePaginationParams: Function, itemsLink: string }> = ({ pagination, changePaginationParams, itemsLink }) => {
     const { currentPage, pageSize, total } = pagination;
     const pageCount = Math.ceil(total / pageSize);
 
     let paginationItems = [];
 
     for (let i = 1; i <= pageCount; i++) {
-        paginationItems.push({ isActive: i === currentPage ? true : false, page: i, to: `/products?page=${i}&pageSize=${pageSize}` })
+        paginationItems.push({ isActive: i === currentPage ? true : false, page: i, to: `/${itemsLink}?page=${i}&pageSize=${pageSize}` })
     }
 
-    const handlePageClick = (event: any) => {
-        console.log(event.target.tabIndex)
-        refetch({ "page": event.target.tabIndex, "pageSize": pageSize })
+    const handleClick = async (event: any) => {
+        // console.log("event.target.tabIndex", event.target.tabIndex)
+        changePaginationParams(parseInt(event.target.tabIndex), pageSize)
     };
 
     return (
-        <Flex gap={'2px'} flexDir='row' justify='center'>
+        <Flex gap='5px' flexDir='row' justify='center' margin='10px'>
             {
-                paginationItems.map(item => <LinkCH key={item.page} href={item.to} target='_parent'  ><Button tabIndex={item.page} colorScheme={item.isActive ? 'blue' : 'gray'}> {item.page}</Button></LinkCH>)
+                paginationItems.map(item =>
+                    <RRLink to={item.to} key={item.page} onClick={handleClick}>
+                        <Button tabIndex={item.page} colorScheme={item.isActive ? 'blue' : 'gray'}>
+                            {item.page}
+                        </Button>
+                    </RRLink>
+                )
             }
         </Flex>
     );

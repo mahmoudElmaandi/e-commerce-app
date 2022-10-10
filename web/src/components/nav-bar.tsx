@@ -1,21 +1,10 @@
-import { ReactNode } from 'react';
+import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import {
-    Box,
-    Flex,
-    Avatar,
-    HStack,
-    Link,
-    IconButton,
-    Button,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuDivider,
-    useDisclosure,
-    Stack,
+    Avatar, Box, Button, Flex, HStack, IconButton, Link, Menu,
+    MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text, useDisclosure
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { ReactNode } from 'react';
+import { Link as Rlink, NavLink } from "react-router-dom";
 
 const Links = [
     ['Products', '/products'],
@@ -23,18 +12,13 @@ const Links = [
     ['Orders', '/orders']
 ];
 
-const NavLink = ({ url, children }: { url: string, children: ReactNode }) => (
-    <Link
-        px={2}
-        py={1}
-        rounded={'md'}
-        _hover={{
-            textDecoration: 'none',
-            bg: 'gray.200',
-        }}
-        href={url}>
-        {children}
-    </Link>
+const RNavLink = ({ url, children }: { url: string, children: ReactNode }) => (
+    <NavLink to={url}  >
+        {({ isActive }) => (
+            (<Link backgroundColor={isActive ? 'blue.700' : ''} color={isActive ? 'white' : 'black'} as={Text} px={2} py={1} rounded={'md'}
+                _hover={{ textDecoration: 'none', bg: isActive ? 'blue.400' : 'gray.200' }}> {children}   </Link>)
+        )}
+    </NavLink >
 );
 
 export const NavBar = () => {
@@ -58,7 +42,7 @@ export const NavBar = () => {
                             spacing={4}
                             display={{ base: 'none', md: 'flex' }}>
                             {Links.map(([name, url]) => (
-                                <NavLink key={name} url={url}>{name}</NavLink>
+                                <RNavLink key={name} url={url}>{name}</RNavLink>
                             ))}
                         </HStack>
                     </HStack>
@@ -89,7 +73,7 @@ export const NavBar = () => {
                     <Box pb={4} display={{ md: 'none' }}>
                         <Stack as={'nav'} spacing={4}>
                             {Links.map(([name, url]) => (
-                                <NavLink key={name} url={url}>{name}</NavLink>
+                                <RNavLink key={name} url={url}>{name}</RNavLink>
                             ))}
                         </Stack>
                     </Box>

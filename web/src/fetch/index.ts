@@ -13,10 +13,22 @@ export class ApiError extends Error {
 
 export async function callEndpoint<Request, Response>(
     endpoint: EndpointConfig,
-    request?: Request
+    request?: Request,
+    queryParams?: { paramKey: string, paramValue: string }[],
+    params?: { paramKey: string, paramValue: string },
 ): Promise<Response> {
-    const { url, method, authorized } = endpoint;
+    let { url, method, authorized } = endpoint;
     const requestBody = request ? JSON.stringify(request) : undefined;
+    if (queryParams?.length) {
+        queryParams.forEach(({ paramKey, paramValue, }, index) => {
+            url = url + `${index === 0 ? "?" : ""}${paramKey}=${paramValue}${index !== queryParams.length - 1 ? "&" : ""}`
+        })
+        // console.log("url", url)
+    }
+    if (params) {
+        url = url.replace(`:${params.paramKey}`, params.paramValue)
+    }
+
     const response = await fetch(`${ROOTENDPOINT}${url}`, {
         method: method,
         headers: {
