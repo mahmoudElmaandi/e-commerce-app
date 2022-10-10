@@ -8,16 +8,13 @@ import { ProductCard } from '../components/product-card';
 
 import { ROOTENDPOINT } from "../env";
 import { callEndpoint } from "../fetch";
-import { getLocalStorageJWT } from "../fetch/auth";
+
 export const ListProducts = () => {
     let [searchParams, setSearchParams] = useSearchParams();
 
-    const page: number = parseInt(searchParams.get("page") || "1");
-    const pageSize: number = parseInt(searchParams.get("pageSize") || "10");
-
     const [products, setProducts] = useState([]);
-    const [pages, setPage] = useState(parseInt(searchParams.get("page")!) || 1);
-    const [pageSizes, setPageSize] = useState(parseInt(searchParams.get("pageSize")!) || 10);
+    const [page, setPage] = useState(parseInt(searchParams.get("page")!) || 1);
+    const [pageSize, setPageSize] = useState(parseInt(searchParams.get("pageSize")!) || 10);
 
     // let { isLoading, isError, data, error, refetch: refetchProducts } = useQuery(['listposts'], () =>
     //     callEndpoint<ListProductsRequest, ListProductsResponse>(EndpointsConfigs.listProducts, Request, [
@@ -36,8 +33,8 @@ export const ListProducts = () => {
     useEffect(() => {
         const response = async () => {
             return await callEndpoint<ListProductsRequest, ListProductsResponse>(EndpointsConfigs.listProducts, Request, [
-                { paramKey: 'page', paramValue: pages.toString() },
-                { paramKey: 'pageSize', paramValue: pageSizes.toString() }
+                { paramKey: 'page', paramValue: page.toString() },
+                { paramKey: 'pageSize', paramValue: pageSize.toString() }
             ]);
         }
 
