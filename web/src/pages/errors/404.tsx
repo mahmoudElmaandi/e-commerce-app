@@ -1,6 +1,6 @@
 import { Box, Heading, Text, Button } from '@chakra-ui/react';
 
-export default function ErrorPage() {
+export default function Error404() {
     return (
         <Box textAlign="center" py={10} px={6}>
             <Heading
@@ -18,7 +18,8 @@ export default function ErrorPage() {
                 The page you're looking for does not seem to exist
             </Text>
 
-            <Button
+            <Button as='a'
+                href='/'
                 colorScheme="teal"
                 bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
                 color="white"

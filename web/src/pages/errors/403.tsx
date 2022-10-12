@@ -1,17 +1,16 @@
-
 import { Box, Heading, Text } from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import { WarningTwoIcon } from '@chakra-ui/icons';
 
-export const SucceededPayment = () => {
+export const Error403 = () => {
     return (
         <Box textAlign="center" py={10} px={6}>
-            <CheckCircleIcon boxSize={'50px'} color={'green.500'} />
+            <WarningTwoIcon boxSize={'50px'} color={'orange.300'} />
             <Heading as="h2" size="xl" mt={6} mb={2}>
-                Thanks for your order!
+                Forbidden !
             </Heading>
             <Text color={'gray.500'}>
-                You can check you order details here
+                You don't have authorization to view this page !
             </Text>
         </Box>
     );
-};
+}
