@@ -1,8 +1,7 @@
-import { EmailIcon } from "@chakra-ui/icons"
-import { Alert, AlertIcon, Button, Container, Flex, FormControl, FormErrorMessage, FormHelperText, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react"
+import { EmailIcon } from "@chakra-ui/icons";
+import { Alert, AlertIcon, Button, Center, Container, FormControl, FormErrorMessage, Input, InputGroup, InputLeftElement, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-
-import { ROOTENDPOINT } from "../env";
+import { Link } from 'react-router-dom';
 
 /**
 Module not found: Error: You attempted to import ../../../server/endpoints which falls outside of the project src/ directory. Relative imports outside of src/ are not supported.
@@ -10,7 +9,6 @@ You can either move it inside src/, or add a symlink to it from project's node_m
  */
 
 // TODO: use CRACO @https://www.npmjs.com/package/@craco/craco/v/7.0.0-alpha.7
-import { EndpointsConfigs } from "@ecommerce/shared";
 import { useNavigate } from "react-router-dom";
 
 import { PasswordInput } from "../components/password-input";
@@ -66,33 +64,39 @@ export const Signup = () => {
     }, [navigate]);
 
     return (
-        <Container maxW='md' color='black'>
-            <Stack spacing={4}>
+        <Center height='100vh' bg={useColorModeValue('gray.50', 'gray.800')}>
 
-                <FormControl isInvalid={username === ''}>
-                    <InputGroup>
-                        <Input isRequired={true} type='text' name="username" placeholder='Username' value={username} onChange={handleChange} />
-                    </InputGroup>
-                    {username ? "" : <FormErrorMessage>Username is required.</FormErrorMessage>}
-                </FormControl>
+            <Container maxW='md'  >
+                <Stack spacing={4} boxShadow={'lg'} rounded={'lg'}
+                    bg={useColorModeValue('white', 'gray.700')}
+                    p='10px'>
 
-                <FormControl isInvalid={email === ''}>
-                    <InputGroup>
-                        <InputLeftElement
-                            pointerEvents='none'
-                            children={<EmailIcon color='gray.300' />}
-                        />
-                        <Input isRequired={true} type='email' name="email" placeholder='Email' value={email} onChange={handleChange} />
-                    </InputGroup>
-                    {email ? "" : <FormErrorMessage>Email is required.</FormErrorMessage>}
-                </FormControl>
+                    <FormControl isInvalid={username === ''}>
+                        <InputGroup>
+                            <Input isRequired={true} type='text' name="username" placeholder='Username' value={username} onChange={handleChange} />
+                        </InputGroup>
+                        {username ? "" : <FormErrorMessage>Username is required.</FormErrorMessage>}
+                    </FormControl>
 
-                <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
+                    <FormControl isInvalid={email === ''}>
+                        <InputGroup>
+                            <InputLeftElement
+                                pointerEvents='none'
+                                children={<EmailIcon color='gray.300' />}
+                            />
+                            <Input isRequired={true} type='email' name="email" placeholder='Email' value={email} onChange={handleChange} />
+                        </InputGroup>
+                        {email ? "" : <FormErrorMessage>Email is required.</FormErrorMessage>}
+                    </FormControl>
 
-                {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
+                    <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
 
-                <Button disabled={!username || !email || !password} colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign Up</Button>
-            </Stack>
-        </Container >
+                    {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
+
+                    <Button disabled={!username || !email || !password} colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign Up</Button>
+                    <Text align={'center'}>Already a user ?< Link to='/signin'> <Text as='b' color='blue.800'>Login</Text></Link></Text>
+                </Stack>
+            </Container >
+        </Center>
     )
 }

@@ -1,6 +1,6 @@
-import { Alert, AlertIcon, Button, Container, FormControl, FormErrorMessage, Input, InputGroup, Stack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, Center, Container, FormControl, FormErrorMessage, Input, InputGroup, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { PasswordInput } from "../components/password-input";
 import { isLoggedIn, singin } from "../fetch/auth";
@@ -50,22 +50,29 @@ export const Signin = () => {
     }, [navigate]);
 
     return (
-        <Container maxW='md' color='black'>
-            <Stack spacing={4}>
+        <Center height='100vh' bg={useColorModeValue('gray.50', 'gray.800')}>
+            <Container maxW='md'  >
+                <Stack spacing={4} boxShadow={'lg'} rounded={'lg'}
+                    bg={useColorModeValue('white', 'gray.700')}
+                    p='10px'>
+                    <Text as='b' fontSize='25px' align={'center'}>Sign in to your account</Text>
 
-                <FormControl isInvalid={login === ''}>
-                    <InputGroup>
-                        <Input type='text' name="login" placeholder='Username or Email' value={login} onChange={handleChange} />
-                    </InputGroup>
-                    {login ? "" : <FormErrorMessage>Username or Email is required.</FormErrorMessage>}
-                </FormControl>
+                    <FormControl isInvalid={login === ''}>
+                        <InputGroup>
+                            <Input type='text' name="login" placeholder='Username or Email' value={login} onChange={handleChange} />
+                        </InputGroup>
+                        {login ? "" : <FormErrorMessage>Username or Email is required.</FormErrorMessage>}
+                    </FormControl>
 
-                <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
+                    <PasswordInput password={password} handleChange={handleChange}></PasswordInput>
 
-                {hasError ? <Alert status='warning'> <AlertIcon />{resError}</Alert> : ''}
+                    {hasError ? <Alert status='warning'> <AlertIcon />{resError}</Alert> : ''}
 
-                <Button disabled={!login || !password} colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign In</Button>
-            </Stack>
-        </Container >
+                    <Button disabled={!login || !password} colorScheme='blue' onClick={async (e) => await handleSignUp(e)}>Sign In</Button>
+                    <Text align={'center'}>Not a user ?< Link to='/signup'> <Text as='b' color='blue.800'>Sign up now</Text></Link></Text>
+
+                </Stack>
+            </Container >
+        </Center>
     )
 }

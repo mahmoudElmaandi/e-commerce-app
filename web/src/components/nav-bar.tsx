@@ -4,7 +4,8 @@ import {
     MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text, useDisclosure
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { Link as Rlink, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { signout } from '../fetch/auth';
 
 const Links = [
     ['Products', '/products'],
@@ -61,9 +62,9 @@ export const NavBar = () => {
                             </MenuButton>
                             <MenuList>
                                 <MenuItem>Link 1</MenuItem>
-                                <MenuItem>Link 2</MenuItem>
                                 <MenuDivider />
                                 <MenuItem>Link 3</MenuItem>
+                                <MenuItem as={Button} onClick={signout}>Sign Out</MenuItem>
                             </MenuList>
                         </Menu>
                     </Flex>

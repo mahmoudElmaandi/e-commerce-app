@@ -61,4 +61,5 @@ export const singin = async (login: string, password: string): Promise<Response>
 
 export const signout = () => {
     localStorage.removeItem(LOCAL_STORAGE_JWT);
+    window.location.replace('/signin')
 };

@@ -1,4 +1,4 @@
-import { Flex, Skeleton } from "@chakra-ui/react"
+import { Center, Flex, SimpleGrid, Skeleton } from "@chakra-ui/react"
 import { EndpointsConfigs, ListOrderItemsRequest, ListOrderItemsResponse, ProductOrderItem } from "@ecommerce/shared"
 import { useQuery } from "react-query"
 import { ProductOrderItemCard } from "../components/order-item-card"
@@ -28,15 +28,17 @@ export const ListOrdersItems = () => {
     const { items } = data as ListOrderItemsResponse
 
     return (
-        <Flex gap='5px' marginTop='10px' flexDir='row' width='100%' alignItems='flex-start' justify='center' flexWrap='wrap'>
-            {
-                items.map((productCartItem: ProductOrderItem, index) => (
-                    <ProductOrderItemCard key={index} productOrderitem={productCartItem}  ></ProductOrderItemCard>
-                ))
-            }
-            {
-                items.length === 0 && 'No Orders'
-            }
-        </Flex>
+        <>
+            <Center m='10px'>
+                <SimpleGrid columns={[1, null, 2]} spacingX={8} spacingY={5} >
+                    {
+                        items.map((productCartItem: ProductOrderItem, index) => (
+                            <ProductOrderItemCard key={index} productOrderitem={productCartItem}  ></ProductOrderItemCard>
+                        ))
+                    }
+                    {items.length === 0 && 'No Orders'}
+                </SimpleGrid>
+            </Center>
+        </>
     )
 }

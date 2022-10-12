@@ -1,6 +1,7 @@
-import { Button, Flex, Skeleton, Square, Text } from "@chakra-ui/react";
+import { Button, Flex, SimpleGrid, Skeleton, Text } from "@chakra-ui/react";
 import { createCheckoutSessionRequest, createCheckoutSessionResponse, EndpointsConfigs, ListCartItemsRequest, ListCartItemsResponse, ProductCartItem } from "@ecommerce/shared";
 import { useQuery } from 'react-query';
+import { Link } from "react-router-dom";
 
 import { ProductCartItemCard } from '../components/cart-item-card';
 import { callEndpoint } from "../fetch";
@@ -14,7 +15,7 @@ export const ListCartItems = () => {
     const createCheckoutSession = async () => {
         try {
             const { sessionUrl } = await callEndpoint<createCheckoutSessionRequest, createCheckoutSessionResponse>(EndpointsConfigs.createCheckOutSession, {
-                items, totalPrice, success_url: `${window.location.origin}/success`, cancel_url: `${window.location.origin}`
+                success_url: `${window.location.origin}/success`, cancel_url: `${window.location.origin}`
             });
             window.location.replace(sessionUrl)
         } catch (e) {
@@ -46,9 +47,19 @@ export const ListCartItems = () => {
     const { items, totalPrice } = data as ListCartItemsResponse
 
     return (
-        <Flex flexDir='row' alignItems='center' justifyItems='center' flexWrap='wrap-reverse'>
+        <SimpleGrid columns={[1, null, 2]} spacingX='1' spacingY={1} >
 
-            <Flex id='cart-items' width='80%' flexDir='row' align='flex-start' justify='center' flexWrap='wrap' gap='10px' margin='5px' marginTop='10px' >
+            <Flex id='checkout' flexDir='column' alignItems='center' justifyItems='center' marginTop='10px' p='10px' gap='5px'>
+                <Text fontSize='25px' fontWeight='bold'> Total: ${Number(totalPrice).toFixed(2)}</Text>
+                {
+                    items.length !== 0 && <Button backgroundColor='darkblue' color='white' onClick={createCheckoutSession}>Checkout</Button>
+                }
+                {
+                    items.length !== 0 && <Link to='checkout'><Button backgroundColor='gold' >CheckOut</Button></Link>
+                }
+            </Flex>
+
+            <Flex id='cart-items' flexDir='row' justifyContent='center' flexWrap='wrap' gap='10px' margin='5px' marginTop='10px' >
                 {
                     items.map((productCartItem: ProductCartItem, index) => (
                         <ProductCartItemCard key={index} productCartItem={productCartItem} refetchCartItems={refetchCartItems}  ></ProductCartItemCard>
@@ -57,16 +68,8 @@ export const ListCartItems = () => {
                 {items.length === 0 && 'Cart is empty'}
             </Flex>
 
-            <Flex id='checkout' flexDir='column' alignItems='center' justifyItems='center' marginTop='10px' p='10px' gap='5px'>
-                <Text fontSize='25px' fontWeight='bold'> Total: ${Number(totalPrice).toFixed(2)}</Text>
-                {
-                    items.length !== 0 && <Button width='100%' backgroundColor='darkblue' color='white' onClick={createCheckoutSession}>Checkout</Button>
-                }
-            </Flex>
-
-        </Flex>
 
 
-
+        </SimpleGrid>
     )
 }
