@@ -6,11 +6,9 @@ import Stripe from 'stripe';
 
 export class CartHandler {
     private db: Datastore;
-    private stripeClient: StripePaymentGateway;
 
-    constructor(db: Datastore, paymentGateway: StripePaymentGateway) {
+    constructor(db: Datastore) {
         this.db = db;
-        this.stripeClient = paymentGateway;
     }
 
     public listCartItems: ExpressHandler<ListCartItemsRequest, ListCartItemsResponse> = async (req, res) => {
@@ -71,61 +69,6 @@ export class CartHandler {
 
         res.send({ updated: true })
     };
-
-    public createCheckoutSession: ExpressHandler<createCheckoutSessionRequest, createCheckoutSessionResponse> = async (req, res) => {
-        // https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-line_items
-        let lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-        let { items, success_url, cancel_url } = req.body;
-        items?.map(item => {
-            let lineItem: Stripe.Checkout.SessionCreateParams.LineItem = {};
-            lineItem.quantity = item.quantity;
-            lineItem.price_data = {
-                currency: 'usd', unit_amount: item.price as number * 100, product_data: { name: item.name, images: [item.image] }
-            }
-            lineItems.push(lineItem)
-        });
-
-        const stripeID = await this.db.getUserStripeID(res.locals.userId)
-        const sessionUrl = await this.stripeClient.createCheckoutSession(stripeID, 'payment', lineItems, success_url!, cancel_url!)
-        res.send({ sessionUrl });
-    }
-
-    public handleCheckoutSessionEvents: ExpressHandler<Partial<Buffer>, any> = async (req, res) => {
-        const payload = req.body;
-        const sig = req.headers['stripe-signature'];
-
-        let event: Stripe.Event;
-
-        try {
-            event = this.stripeClient.verifySessionEvent(payload as Buffer, sig as string, process.env.STRIPE_WEBHOOK_SK!);
-            console.log("Verified", event.type)
-        } catch (err) {
-            console.log("error", (err as Error).message)
-            return res.status(400).send({ error: (err as Error).message });
-        }
-
-
-        console.log("coming event", event.type)
-
-        // Handle the checkout.session.completed event
-        if (event.type === 'checkout.session.completed') {
-            const session = event.data.object as Stripe.Checkout.Session;
-            // console.log("Fulfilling order", session);
-
-            // TODO: fill me in
-            if (session.payment_status === 'paid') {
-                // get userId and cartID 
-                const userId = await this.db.getUserIdByStripeId(session.customer as string);
-                const cartId = await this.db.getUserCartId(userId)
-                // Saving a copy of the order in database.
-                // Delete temporary cart items 
-                // Update Products Stock
-                await this.db.fulfillOrder(userId, cartId, session.amount_total as number / 100)
-            }
-        }
-
-        res.send({ completed: true });
-    }
 
     private doesProductExistsInCart = async (cartId: string, productId: string) => {
         return ((await this.db.listCartItems(cartId)).items).some(cartItem => cartItem.product_id == productId)

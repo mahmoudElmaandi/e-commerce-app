@@ -13,11 +13,12 @@ import cors from 'cors';
 import { initPaymentGateway, stripeGateway } from './payment';
 import bodyParser from 'body-parser';
 import { bodyParserMiddleware } from './middleware/bodyBufferMiddleware';
+import { StripeHandler } from './handlers/stripeHandler';
 
-export async function createServer(pool: Pool, stripeSK: string) {
+export async function createServer(pool: Pool, stripeSK: string, stripeWebHookSecret: string) {
 
     await initDb(pool);
-    await initPaymentGateway(stripeSK);
+    await initPaymentGateway(stripeSK, stripeWebHookSecret);
 
     const app: Express = express();
 
@@ -39,7 +40,8 @@ export async function createServer(pool: Pool, stripeSK: string) {
     const userHandler = new UserHandler(db, stripeGateway);
     const productHandler = new ProductHandler(db);
     const categoryHandler = new CategoryHandler(db);
-    const cartHandler = new CartHandler(db, stripeGateway);
+    const cartHandler = new CartHandler(db);
+    const stripeHandler = new StripeHandler(db, stripeGateway);
     const orderHandler = new OrderHandler(db);
 
     const EndpointsHandlers: { [key in Endpoints]: RequestHandler<any, any> } = {
@@ -62,8 +64,9 @@ export async function createServer(pool: Pool, stripeSK: string) {
         [Endpoints.updateCartItemQuantity]: cartHandler.updateCartItemQuantity,
         [Endpoints.deleteCartItem]: cartHandler.deleteCartItem,
 
-        [Endpoints.createCheckOutSession]: cartHandler.createCheckoutSession,
-        [Endpoints.handleCheckoutSessionEvents]: cartHandler.handleCheckoutSessionEvents,
+        [Endpoints.createCheckOutSession]: stripeHandler.createCheckoutSession,
+        [Endpoints.createPaymentIntent]: stripeHandler.createPaymentIntent,
+        [Endpoints.handleCheckoutSessionEvents]: stripeHandler.handleCheckoutSessionEvents,
 
         [Endpoints.listOrderItems]: orderHandler.listOrderItems,
 

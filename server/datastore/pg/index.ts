@@ -138,6 +138,10 @@ export class pgDatastore implements Datastore {
         INNER JOIN products as p ON oi.product_id = p.id`, [orderId])).rows
     };
 
+    async calculateOrderAmount(cartId: string): Promise<number> {
+        return await this.calculateTotalCartPrice(cartId)
+    };
+
     async fulfillOrder(userId: string, cartId: string, total: number): Promise<void> {
         const orderId = (await this.pool.query(`INSERT INTO Orders (user_id,total) VALUES ($1, $2) RETURNING id`, [userId, total])).rows[0].id
 

@@ -53,8 +53,12 @@ export interface updateCartItemQuantityResponse { updated: boolean };
 export interface deleteCartItemRequest { itemId: string };
 export interface deleteCartItemResponse { deleted: boolean };
 
-export interface createCheckoutSessionRequest { items: ProductCartItem[], totalPrice: number, success_url: string, cancel_url: string };
+// Stripe
+export interface createCheckoutSessionRequest { success_url: string, cancel_url: string };
 export interface createCheckoutSessionResponse { sessionUrl: string };
+
+export interface createPaymentIntentRequest { };
+export interface createPaymentIntentResponse { clientSecret: string };
 
 
 // Orders 

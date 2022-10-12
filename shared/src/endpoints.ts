@@ -23,7 +23,7 @@ export enum Endpoints {
 
   createCheckOutSession = 'createCheckOutSession',
   handleCheckoutSessionEvents = 'handleCheckoutSessionEvents',
-
+  createPaymentIntent = 'createPaymentIntent',
   listOrderItems = 'listOrderItems'
 }
 
@@ -46,8 +46,10 @@ export const EndpointsConfigs: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.addCartItem]: { method: 'post', url: `/api/${APIVER}/carts/add-item`, authenticated: true },
   [Endpoints.updateCartItemQuantity]: { method: 'put', url: `/api/${APIVER}/carts/update-item`, authenticated: true },
   [Endpoints.deleteCartItem]: { method: 'delete', url: `/api/${APIVER}/carts/delete-item`, authenticated: true },
+
   [Endpoints.createCheckOutSession]: { method: 'post', url: `/api/${APIVER}/stripe/create-checkout-session`, authenticated: true },
-  [Endpoints.handleCheckoutSessionEvents]: { method: 'post', url: `/api/${APIVER}/stripe/webhook`, rawReq: true },
+  [Endpoints.createPaymentIntent]: { method: 'post', url: `/api/${APIVER}/stripe/create-payment-intent`, authenticated: true },
+  [Endpoints.handleCheckoutSessionEvents]: { method: 'post', url: `/api/${APIVER}/stripe/events`, rawReq: true },
 
   [Endpoints.listOrderItems]: { method: 'get', url: `/api/${APIVER}/orders`, authenticated: true }
 
