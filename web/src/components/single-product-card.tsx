@@ -77,7 +77,7 @@ export const SingleProductCard = () => {
                                 fontWeight={'500'}
                                 textTransform={'uppercase'}
                                 mb={'4'}>
-                                Product Detais
+                                Product Details
                             </Text>
 
                             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
