@@ -10,14 +10,16 @@ import { callEndpoint } from "../../fetch";
 export const CheckOut = () => {
 
     const [clientSecret, setClientSecret] = useState("");
+    const [error, setError] = useState("");
 
     const stripe = useOutletContext() as Stripe;
     console.log("useOutletContext", stripe);
 
     useEffect(() => {
         callEndpoint<createPaymentIntentRequest, createPaymentIntentResponse>(EndpointsConfigs.createPaymentIntent)
-            .then((data) => setClientSecret(data.clientSecret));
-    }, [stripe]);
+            .then((data) => setClientSecret(data.clientSecret))
+            .catch(err => console.log(err))
+    }, []);
 
     return (
         <>
@@ -28,6 +30,9 @@ export const CheckOut = () => {
                     <CheckoutForm />
                 </Elements>
             )}
+            {
+                error && error
+            }
         </>
     );
 }

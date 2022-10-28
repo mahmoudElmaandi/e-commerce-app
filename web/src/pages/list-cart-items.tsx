@@ -1,4 +1,5 @@
-import { Button, Flex, SimpleGrid, Skeleton, Text } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Button, Flex, Heading, SimpleGrid, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { createCheckoutSessionRequest, createCheckoutSessionResponse, EndpointsConfigs, ListCartItemsRequest, ListCartItemsResponse, ProductCartItem } from "@ecommerce/shared";
 import { useQuery } from 'react-query';
 import { Link } from "react-router-dom";
@@ -47,19 +48,11 @@ export const ListCartItems = () => {
     const { items, totalPrice } = data as ListCartItemsResponse
 
     return (
-        <SimpleGrid columns={[1, null, 2]} spacingX='1' spacingY={1} >
+        <SimpleGrid id='cart' columns={[1, null, 2]}
+            display={{ base: "grid", lg: 'grid', md: "block", sm: 'block' }}
+            m='2' spacingX='9' spacingY='10' >
 
-            <Flex id='checkout' flexDir='column' alignItems='center' justifyItems='center' marginTop='10px' p='10px' gap='5px'>
-                <Text fontSize='25px' fontWeight='bold'> Total: ${Number(totalPrice).toFixed(2)}</Text>
-                {
-                    items.length !== 0 && <Button backgroundColor='darkblue' color='white' onClick={createCheckoutSession}>Checkout</Button>
-                }
-                {
-                    items.length !== 0 && <Link to='checkout'><Button backgroundColor='gold' >CheckOut</Button></Link>
-                }
-            </Flex>
-
-            <Flex id='cart-items' flexDir='row' justifyContent='center' flexWrap='wrap' gap='10px' margin='5px' marginTop='10px' >
+            <Flex id='cart-items' flexDir='row' justifyContent='flex-start' flexWrap='wrap' gap='10px' marginTop='10px' >
                 {
                     items.map((productCartItem: ProductCartItem, index) => (
                         <ProductCartItemCard key={index} productCartItem={productCartItem} refetchCartItems={refetchCartItems}  ></ProductCartItemCard>
@@ -68,8 +61,34 @@ export const ListCartItems = () => {
                 {items.length === 0 && 'Cart is empty'}
             </Flex>
 
+            <Stack id='cart-checkout' spacing="8" borderWidth="2px" rounded="lg" margin='8' padding="10"
+                height='sm' width={{ base: "sm", md: "xs", sm: 'sm' }}>
+                <Heading size="md">Order Summary</Heading>
 
+                <Stack spacing="6">
+                    <Flex justify="space-between">
+                        <Text fontSize="lg" fontWeight="semibold">
+                            Total
+                        </Text>
+                        <Text fontSize="xl" fontWeight="extrabold">
+                            ${totalPrice}
+                        </Text>
+                    </Flex>
+                </Stack>
 
+                {
+                    items.length !== 0 &&
+                    <Button colorScheme="blue" size="lg" fontSize="md" onClick={createCheckoutSession} rightIcon={<ArrowForwardIcon />}>
+                        Checkout Session
+                    </Button>
+                }
+                {
+                    items.length !== 0 &&
+                    <Button as={Link} to='checkout' colorScheme="blue" size="lg" fontSize="md" rightIcon={<ArrowForwardIcon />}>
+                        Checkout
+                    </Button>
+                }
+            </Stack>
         </SimpleGrid>
     )
 }

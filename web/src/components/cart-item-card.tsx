@@ -1,5 +1,4 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import { Alert, AlertIcon, Flex, IconButton, Image, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, CloseButton, Flex, Image, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { deleteCartItemRequest, deleteCartItemResponse, EndpointsConfigs, ProductCartItem, updateCartItemQuantityRequest, updateCartItemQuantityResponse } from "@ecommerce/shared";
 import React, { useCallback, useState } from "react";
 import { ApiError, callEndpoint } from "../fetch";
@@ -47,39 +46,31 @@ export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, r
 
 
     return (
+        <Flex direction={{ base: 'row', md: 'row' }} align="center">
 
-        <Flex id="cart-item" flexDir='column' alignItems='center' justifyItems='center'
-            width='100%' maxWidth='350px' height='310px' maxHeight='500px'
-            padding='5px' border='2px solid white' borderRadius='5px' boxShadow='lg'>
-
-            <Flex id="cart-item-image" width='150px' height='120px' maxHeight='120px'>
-                <Image src={image} width='150px' maxWidth='150px' height='120px' maxHeight='120px' ></Image>
-            </Flex>
-
-            <Flex id="cart-item-info" flexDir='column' alignItems='center' justifyItems='center'
-                height='150px' maxHeight='150px' flexWrap='wrap' >
-
-                <Flex width='300px' maxWidth='500px' height='80px' maxHeight='100px'  >
-                    <Text fontSize={15} fontWeight='bold' >{name} </Text>
-                </Flex>
-
-                <Flex flexDir='row' gap='10px'>
-                    <Text fontSize={25} >Stock : {stock} </Text>
-                    <Text fontSize={25} >Price : ${Number(price).toFixed(2)} </Text>
-                    {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
-                </Flex>
-
-            </Flex>
-
-            <Flex id="cart-item-controls" gap='5px' flexDir='row'>
-
-                <IconButton
-                    onClick={async () => { await deleteCartItem(cart_item_id) }}
-                    colorScheme='red'
-                    aria-label='Call Segun'
-                    size='lg'
-                    icon={<DeleteIcon />}
+            <Stack direction="row" spacing="5" width={{ base: 'md', md: 'md', sm: 'sm' }} display={{ base: 'block', md: 'flex' }} >
+                <Image
+                    rounded="lg"
+                    width="120px"
+                    height="120px"
+                    fit="cover"
+                    src={image}
+                    alt={name}
+                    draggable="false"
+                    loading="lazy"
                 />
+                <Box pt="4">
+                    <Stack spacing="0.5">
+                        <Text noOfLines={[1, 2, 3]} fontWeight="medium">{name}</Text>
+                        <Text as="span" width='70px' fontWeight="semibold" color={useColorModeValue('gray.800', 'gray.100')}>
+                            ${Number(price).toFixed(2)}
+                        </Text>
+                        {hasError ? <Alert status='warning'><AlertIcon /> {resError} </Alert> : ''}
+                    </Stack>
+                </Box>
+            </Stack>
+
+            <Flex gap='2' align='center' justify="center" display={{ base: 'flex', md: 'flex' }}>
 
                 <NumberInput size='lg' maxW={32} value={quantity} min={1} max={stock} onChange={async (_, newQuantity) => await updateQuantity(newQuantity)}>
                     <NumberInputField />
@@ -88,9 +79,12 @@ export const ProductCartItemCard: React.FC<{ productCartItem: ProductCartItem, r
                         <NumberDecrementStepper />
                     </NumberInputStepper>
                 </NumberInput>
+
+
+                <CloseButton aria-label={`Delete ${name} from cart`} _hover={{ background: 'red', color: 'white' }} onClick={async () => { await deleteCartItem(cart_item_id) }} />
+
             </Flex>
 
-        </Flex >
-
+        </Flex>
     )
 };
